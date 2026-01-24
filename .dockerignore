@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.env
+.env.local
+.env.production
+README.md
+docker-compose.yml
+Dockerfile
+.dockerignore
+uploads/*
+!uploads/.gitkeep
+uploads/photos/*
+!uploads/photos/.gitkeep
+uploads/downloads/*
+!uploads/downloads/.gitkeep
