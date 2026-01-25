@@ -36,14 +36,10 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Routes will be imported here
-// import authRoutes from './src/routes/auth.routes.js';
-// import newsRoutes from './src/routes/news.routes.js';
-// etc...
+// Routes
+import authRoutes from "./src/routes/auth.routes.js";
 
-// app.use('/api/auth', authRoutes);
-// app.use('/api/news', newsRoutes);
-// etc...
+app.use("/api/auth", authRoutes);
 
 // 404 handler
 app.use((req, res) => {
