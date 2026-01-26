@@ -27,14 +27,14 @@ router.post(
   authenticateToken,
   isAdmin,
   uploadPhoto.single("cover_photo"),
-  createAlbum
+  createAlbum,
 );
 router.put(
   "/albums/:id",
   authenticateToken,
   isAdmin,
   uploadPhoto.single("cover_photo"),
-  updateAlbum
+  updateAlbum,
 );
 router.delete("/albums/:id", authenticateToken, isAdmin, deleteAlbum);
 
@@ -44,21 +44,21 @@ router.post(
   authenticateToken,
   isAdmin,
   uploadPhoto.single("photo"),
-  addPhoto
+  addPhoto,
 );
 router.put(
   "/photos/:id",
   authenticateToken,
   isAdmin,
   uploadPhoto.single("photo"),
-  updatePhoto
+  updatePhoto,
 );
 router.delete("/photos/:id", authenticateToken, isAdmin, deletePhoto);
 router.put(
   "/albums/:albumId/photos/reorder",
   authenticateToken,
   isAdmin,
-  reorderPhotos
+  reorderPhotos,
 );
 
 export default router;

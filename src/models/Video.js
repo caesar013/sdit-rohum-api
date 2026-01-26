@@ -69,7 +69,7 @@ class Video {
       `INSERT INTO videos 
        (title, description, video_url, thumbnail_url, platform, duration) 
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [title, description, video_url, thumbnail_url, platform, duration]
+      [title, description, video_url, thumbnail_url, platform, duration],
     );
 
     return result.insertId;
@@ -120,7 +120,7 @@ class Video {
     values.push(id);
     const [result] = await pool.query(
       `UPDATE videos SET ${fields.join(", ")} WHERE id = ?`,
-      values
+      values,
     );
 
     return result.affectedRows;

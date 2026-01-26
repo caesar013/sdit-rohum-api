@@ -356,7 +356,8 @@ export const reorderPhotos = async (req, res, next) => {
     if (!Array.isArray(photos) || photos.length === 0) {
       return res.status(400).json({
         success: false,
-        message: "Data photos harus berupa array dengan format {id, display_order}",
+        message:
+          "Data photos harus berupa array dengan format {id, display_order}",
       });
     }
 

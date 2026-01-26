@@ -14,7 +14,7 @@ class PhotoAlbum {
 
     // Count total
     const [countResult] = await pool.query(
-      "SELECT COUNT(*) as total FROM photo_albums"
+      "SELECT COUNT(*) as total FROM photo_albums",
     );
     const total = countResult[0].total;
 
@@ -25,7 +25,7 @@ class PhotoAlbum {
        FROM photo_albums pa
        ORDER BY pa.album_date DESC, pa.created_at DESC 
        LIMIT ? OFFSET ?`,
-      [limit, offset]
+      [limit, offset],
     );
 
     return {
@@ -47,7 +47,7 @@ class PhotoAlbum {
   static async getById(id) {
     const [albums] = await pool.query(
       "SELECT * FROM photo_albums WHERE id = ?",
-      [id]
+      [id],
     );
 
     if (albums.length === 0) {
@@ -59,7 +59,7 @@ class PhotoAlbum {
     // Get photos for this album
     const [photos] = await pool.query(
       "SELECT * FROM photos WHERE album_id = ? ORDER BY display_order ASC, created_at ASC",
-      [id]
+      [id],
     );
 
     album.photos = photos;
@@ -76,7 +76,7 @@ class PhotoAlbum {
   static async getBySlug(slug) {
     const [albums] = await pool.query(
       "SELECT * FROM photo_albums WHERE slug = ?",
-      [slug]
+      [slug],
     );
 
     if (albums.length === 0) {
@@ -88,7 +88,7 @@ class PhotoAlbum {
     // Get photos for this album
     const [photos] = await pool.query(
       "SELECT * FROM photos WHERE album_id = ? ORDER BY display_order ASC, created_at ASC",
-      [album.id]
+      [album.id],
     );
 
     album.photos = photos;
@@ -118,7 +118,7 @@ class PhotoAlbum {
       `INSERT INTO photo_albums 
        (title, slug, description, cover_photo, album_date) 
        VALUES (?, ?, ?, ?, ?)`,
-      [title, slug, description, cover_photo, album_date]
+      [title, slug, description, cover_photo, album_date],
     );
 
     return result.insertId;
@@ -147,7 +147,7 @@ class PhotoAlbum {
       // Check if new slug exists (excluding current album)
       const [duplicates] = await pool.query(
         "SELECT id FROM photo_albums WHERE slug = ? AND id != ?",
-        [slug, id]
+        [slug, id],
       );
 
       if (duplicates.length > 0) {
@@ -186,7 +186,7 @@ class PhotoAlbum {
     values.push(id);
     const [result] = await pool.query(
       `UPDATE photo_albums SET ${fields.join(", ")} WHERE id = ?`,
-      values
+      values,
     );
 
     return result.affectedRows;
@@ -198,10 +198,9 @@ class PhotoAlbum {
    * @returns {Promise<number>} Affected rows
    */
   static async delete(id) {
-    const [result] = await pool.query(
-      "DELETE FROM photo_albums WHERE id = ?",
-      [id]
-    );
+    const [result] = await pool.query("DELETE FROM photo_albums WHERE id = ?", [
+      id,
+    ]);
     return result.affectedRows;
   }
 }

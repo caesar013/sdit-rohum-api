@@ -9,7 +9,7 @@ class Photo {
   static async getByAlbumId(albumId) {
     const [rows] = await pool.query(
       "SELECT * FROM photos WHERE album_id = ? ORDER BY display_order ASC, created_at ASC",
-      [albumId]
+      [albumId],
     );
     return rows;
   }
@@ -36,7 +36,7 @@ class Photo {
       `INSERT INTO photos 
        (album_id, photo_url, caption, display_order) 
        VALUES (?, ?, ?, ?)`,
-      [album_id, photo_url, caption, display_order]
+      [album_id, photo_url, caption, display_order],
     );
 
     return result.insertId;
@@ -74,7 +74,7 @@ class Photo {
     values.push(id);
     const [result] = await pool.query(
       `UPDATE photos SET ${fields.join(", ")} WHERE id = ?`,
-      values
+      values,
     );
 
     return result.affectedRows;
@@ -97,7 +97,7 @@ class Photo {
    */
   static async updateOrder(updates) {
     const promises = updates.map(({ id, display_order }) =>
-      this.update(id, { display_order })
+      this.update(id, { display_order }),
     );
     await Promise.all(promises);
   }

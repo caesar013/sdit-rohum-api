@@ -4,17 +4,17 @@
  */
 
 export const VIDEO_PLATFORM = {
-  YOUTUBE: 'youtube',
-  VIMEO: 'vimeo',
-  OTHER: 'other',
+  YOUTUBE: "youtube",
+  VIMEO: "vimeo",
+  OTHER: "other",
 };
 
 export const VIDEO_PLATFORM_VALUES = Object.values(VIDEO_PLATFORM);
 
 export const VIDEO_PLATFORM_LABELS = {
-  [VIDEO_PLATFORM.YOUTUBE]: 'YouTube',
-  [VIDEO_PLATFORM.VIMEO]: 'Vimeo',
-  [VIDEO_PLATFORM.OTHER]: 'Other',
+  [VIDEO_PLATFORM.YOUTUBE]: "YouTube",
+  [VIDEO_PLATFORM.VIMEO]: "Vimeo",
+  [VIDEO_PLATFORM.OTHER]: "Other",
 };
 
 /**
@@ -32,7 +32,8 @@ export const isValidPlatform = (platform) => {
  * @returns {string|null}
  */
 export const getYouTubeId = (url) => {
-  const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const regex =
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
   const match = url.match(regex);
   return match ? match[1] : null;
 };
@@ -43,7 +44,7 @@ export const getYouTubeId = (url) => {
  * @param {string} quality - default, hqdefault, mqdefault, sddefault, maxresdefault
  * @returns {string}
  */
-export const getYouTubeThumbnail = (videoId, quality = 'hqdefault') => {
+export const getYouTubeThumbnail = (videoId, quality = "hqdefault") => {
   return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
 };
 
