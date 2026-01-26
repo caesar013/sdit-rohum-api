@@ -39,9 +39,11 @@ app.get("/api/health", (req, res) => {
 // Routes
 import authRoutes from "./src/routes/auth.routes.js";
 import schoolProfileRoutes from "./src/routes/schoolProfile.routes.js";
+import newsRoutes from "./src/routes/news.routes.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/school-profile", schoolProfileRoutes);
+app.use("/api/news", newsRoutes);
 
 // 404 handler
 app.use((req, res) => {
