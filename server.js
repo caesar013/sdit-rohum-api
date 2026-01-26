@@ -38,8 +38,10 @@ app.get("/api/health", (req, res) => {
 
 // Routes
 import authRoutes from "./src/routes/auth.routes.js";
+import schoolProfileRoutes from "./src/routes/schoolProfile.routes.js";
 
 app.use("/api/auth", authRoutes);
+app.use("/api/school-profile", schoolProfileRoutes);
 
 // 404 handler
 app.use((req, res) => {

@@ -26,26 +26,15 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
--- Table: school_profile
+-- Table: school_profile (Key-Value Structure)
 -- ============================================
 CREATE TABLE school_profile (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  school_name VARCHAR(200) NOT NULL,
-  npsn VARCHAR(20),
-  address TEXT,
-  phone VARCHAR(20),
-  email VARCHAR(100),
-  website VARCHAR(100),
-  principal_name VARCHAR(100),
-  principal_message TEXT,
-  established_year YEAR,
-  accreditation ENUM('A', 'B', 'C', 'Unaccredited') DEFAULT 'A',
-  accreditation_year YEAR,
-  logo_url VARCHAR(255),
-  vision TEXT,
-  mission TEXT,
+  `key` VARCHAR(100) NOT NULL UNIQUE,
+  `value` TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_key (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
@@ -278,30 +267,26 @@ CREATE TABLE contact_messages (
 -- Password: password123 (hashed with bcrypt)
 -- ============================================
 INSERT INTO users (name, email, password, role, is_active) VALUES
-('Administrator', 'admin@sditrohum.sch.id', '$2b$10$RNqDUk9Xq7aZMCmx1sBvGuDUpBnPrkngIhsLE1FTKflkN/vyeZBAi', 'super_admin', TRUE);
+('Administrator', 'admin@sditrohum.sch.id', '$2b$10$RNqDUk9Xq7aZMCmx1sBvGuDUpBnPrkngIhsLE1FTKflkN/vyeZBAi', 'admin', TRUE);
 
 -- ============================================
 -- Insert School Profile Data
 -- ============================================
-INSERT INTO school_profile (
-  school_name, npsn, address, phone, email, website, 
-  principal_name, principal_message, established_year, 
-  accreditation, accreditation_year, vision, mission
-) VALUES (
-  'SD IT Rohmatul Ummah',
-  '20528764',
-  'Jl. Pendidikan No. 123, Kota Anda',
-  '(021) 1234567',
-  'info@sditrohum.sch.id',
-  'https://sditrohum.sch.id',
-  'Dr. Ahmad Hidayat, M.Pd',
-  'Assalamualaikum warahmatullahi wabarakatuh. Selamat datang di SD IT Rohmatul Ummah. Kami berkomitmen untuk memberikan pendidikan terbaik yang mengintegrasikan ilmu pengetahuan dengan nilai-nilai Islam.',
-  2010,
-  'A',
-  2023,
-  'Menjadi sekolah Islam terpadu yang unggul dalam prestasi dan berakhlak mulia',
-  'Menyelenggarakan pendidikan Islam yang berkualitas; Membentuk generasi yang cerdas, kreatif, dan berakhlak mulia; Menciptakan lingkungan belajar yang kondusif dan Islami'
-);
+INSERT INTO school_profile (`key`, `value`) VALUES
+  ('school_name', 'SD IT Rohmatul Ummah'),
+  ('npsn', '20528764'),
+  ('address', 'Jl. Pendidikan No. 123, Kota Anda'),
+  ('phone', '(021) 1234567'),
+  ('email', 'info@sditrohum.sch.id'),
+  ('website', 'https://sditrohum.sch.id'),
+  ('principal_name', 'Dr. Ahmad Hidayat, M.Pd'),
+  ('principal_message', 'Assalamualaikum warahmatullahi wabarakatuh. Selamat datang di SD IT Rohmatul Ummah. Kami berkomitmen untuk memberikan pendidikan terbaik yang mengintegrasikan ilmu pengetahuan dengan nilai-nilai Islam.'),
+  ('established_year', '2010'),
+  ('accreditation', 'A'),
+  ('accreditation_year', '2023'),
+  ('logo_url', ''),
+  ('vision', 'Menjadi sekolah Islam terpadu yang unggul dalam prestasi dan berakhlak mulia'),
+  ('mission', 'Menyelenggarakan pendidikan Islam yang berkualitas; Membentuk generasi yang cerdas, kreatif, dan berakhlak mulia; Menciptakan lingkungan belajar yang kondusif dan Islami');
 
 -- ============================================
 -- Insert Sample Achievements
