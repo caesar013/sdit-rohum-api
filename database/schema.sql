@@ -278,7 +278,7 @@ CREATE TABLE contact_messages (
 -- Password: password123 (hashed with bcrypt)
 -- ============================================
 INSERT INTO users (name, email, password, role, is_active) VALUES
-('Administrator', 'admin@sditrohum.sch.id', '$2b$10$rKwLq6eR7jO5N3K3K3K3KuqH5y5y5y5y5y5y5y5y5y5y5y5y5y5yz2', 'super_admin', TRUE);
+('Administrator', 'admin@sditrohum.sch.id', '$2b$10$RNqDUk9Xq7aZMCmx1sBvGuDUpBnPrkngIhsLE1FTKflkN/vyeZBAi', 'super_admin', TRUE);
 
 -- ============================================
 -- Insert School Profile Data
