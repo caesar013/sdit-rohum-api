@@ -27,6 +27,7 @@ export const authenticateToken = (req, res, next) => {
 
 // Middleware to check if user is admin
 export const isAdmin = (req, res, next) => {
+  console.log("User role:", req.user ? req.user.role : "No user");
   if (
     req.user &&
     (req.user.role === "admin" || req.user.role === "super_admin")

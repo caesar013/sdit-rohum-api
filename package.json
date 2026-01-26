@@ -10,7 +10,12 @@
     "db:shell:user": "docker exec -it sdit-rohum-mysql mysql -u sdit_user -psdit_password sdit_rohum",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["express", "mysql", "school", "api"],
+  "keywords": [
+    "express",
+    "mysql",
+    "school",
+    "api"
+  ],
   "author": "SD IT Rohmatul Ummah",
   "license": "ISC",
   "description": "Backend API for SD IT Rohmatul Ummah school website",
@@ -22,7 +27,8 @@
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.0.2",
-    "mysql2": "^3.16.1"
+    "mysql2": "^3.16.1",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
