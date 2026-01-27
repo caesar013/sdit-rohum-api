@@ -8,3 +8,5 @@ export * from "./newsCategory.js";
 export * from "./videoPlatform.js";
 export * from "./contactStatus.js";
 export * from "./teacherStatus.js";
+export * from "./facilityCategory.js";
+export * from "./facilityCondition.js";

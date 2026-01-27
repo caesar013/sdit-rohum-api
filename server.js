@@ -44,6 +44,7 @@ import videoRoutes from "./src/routes/video.routes.js";
 import galleryRoutes from "./src/routes/gallery.routes.js";
 import contactRoutes from "./src/routes/contact.routes.js";
 import teacherRoutes from "./src/routes/teacher.routes.js";
+import facilityRoutes from "./src/routes/facility.routes.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/school-profile", schoolProfileRoutes);
@@ -52,6 +53,7 @@ app.use("/api/videos", videoRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/teachers", teacherRoutes);
+app.use("/api/facilities", facilityRoutes);
 
 // 404 handler
 app.use((req, res) => {
