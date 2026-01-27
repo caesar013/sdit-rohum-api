@@ -12,3 +12,5 @@ export * from "./facilityCategory.js";
 export * from "./facilityCondition.js";
 export * from "./achievementCategory.js";
 export * from "./achievementLevel.js";
+export * from "./studentStatus.js";
+export * from "./alumniStatus.js";

@@ -115,6 +115,34 @@ CREATE TABLE teachers (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
+-- Table: academic_years
+-- ============================================
+CREATE TABLE academic_years (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  year VARCHAR(20) NOT NULL UNIQUE,
+  is_active BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_year (year),
+  INDEX idx_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- Table: classes
+-- ============================================
+CREATE TABLE classes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  grade INT NOT NULL,
+  academic_year_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (academic_year_id) REFERENCES academic_years(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_class (grade, academic_year_id),
+  INDEX idx_grade (grade),
+  INDEX idx_academic_year (academic_year_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
 -- Table: students
 -- ============================================
 CREATE TABLE students (
@@ -126,8 +154,6 @@ CREATE TABLE students (
   gender ENUM('male', 'female') NOT NULL,
   birth_place VARCHAR(100),
   birth_date DATE,
-  class VARCHAR(20),
-  academic_year VARCHAR(20),
   status ENUM('active', 'inactive', 'graduated', 'transferred') DEFAULT 'active',
   parent_name VARCHAR(100),
   parent_phone VARCHAR(20),
@@ -136,8 +162,24 @@ CREATE TABLE students (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_nisn (nisn),
   INDEX idx_status (status),
-  INDEX idx_class (class),
-  INDEX idx_academic_year (academic_year)
+  INDEX idx_gender (gender)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
+-- Table: student_enrollments
+-- ============================================
+CREATE TABLE student_enrollments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  class_id INT NOT NULL,
+  enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+  FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_enrollment (student_id, class_id),
+  INDEX idx_student (student_id),
+  INDEX idx_class (class_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
@@ -348,14 +390,76 @@ INSERT INTO teachers (nip, name, position, subject, status, education_level, pho
 ('199203152014011005', 'Yoga Pratama, S.Pd', 'Guru Penjaskes', 'Pendidikan Jasmani', 'active', 'S1 Penjaskes', '081234567894', 'yoga@sditrohum.sch.id', '2019-08-01');
 
 -- ============================================
+-- Insert Sample Academic Years (Past 4 years)
+-- ============================================
+INSERT INTO academic_years (year, is_active) VALUES
+('2022/2023', FALSE),
+('2023/2024', FALSE),
+('2024/2025', FALSE),
+('2025/2026', TRUE);
+
+-- ============================================
+-- Insert Sample Classes (Grades 1-6 for each year)
+-- ============================================
+INSERT INTO classes (grade, academic_year_id) VALUES
+-- 2024/2025 (id=3)
+(1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (6, 3),
+-- 2025/2026 (id=4)
+(1, 4), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4);
+
+-- ============================================
 -- Insert Sample Students
 -- ============================================
-INSERT INTO students (nisn, nis, name, gender, birth_place, birth_date, class, academic_year, status, parent_name, parent_phone) VALUES
-('0123456789', '2024001', 'Muhammad Rizki Pratama', 'male', 'Jakarta', '2015-03-15', '4A', '2025/2026', 'active', 'Bapak Pratama', '081234561111'),
-('0123456790', '2024002', 'Aisyah Putri Azzahra', 'female', 'Bandung', '2015-05-20', '4A', '2025/2026', 'active', 'Ibu Azzahra', '081234561112'),
-('0123456791', '2024003', 'Ahmad Hafidz Rahman', 'male', 'Surabaya', '2016-08-10', '3B', '2025/2026', 'active', 'Bapak Rahman', '081234561113'),
-('0123456792', '2024004', 'Fatimah Zahra', 'female', 'Yogyakarta', '2016-11-25', '3A', '2025/2026', 'active', 'Ibu Zahra', '081234561114'),
-('0123456793', '2024005', 'Umar Faruq Abdullah', 'male', 'Semarang', '2017-02-14', '2A', '2025/2026', 'active', 'Bapak Abdullah', '081234561115');
+INSERT INTO students (nisn, nis, name, gender, birth_place, birth_date, status, parent_name, parent_phone) VALUES
+('0123456789', '2024001', 'Muhammad Rizki Pratama', 'male', 'Jakarta', '2015-03-15', 'active', 'Bapak Pratama', '081234561111'),
+('0123456790', '2024002', 'Aisyah Putri Azzahra', 'female', 'Bandung', '2015-05-20', 'active', 'Ibu Azzahra', '081234561112'),
+('0123456791', '2024003', 'Ahmad Hafidz Rahman', 'male', 'Surabaya', '2016-08-10', 'active', 'Bapak Rahman', '081234561113'),
+('0123456792', '2024004', 'Fatimah Zahra', 'female', 'Yogyakarta', '2016-11-25', 'active', 'Ibu Zahra', '081234561114'),
+('0123456793', '2024005', 'Umar Faruq Abdullah', 'male', 'Semarang', '2017-02-14', 'active', 'Bapak Abdullah', '081234561115'),
+('0123456794', '2023006', 'Zahra Kamila', 'female', 'Medan', '2016-04-18', 'active', 'Ibu Kamila', '081234561116'),
+('0123456795', '2023007', 'Faris Maulana', 'male', 'Malang', '2015-09-22', 'active', 'Bapak Maulana', '081234561117'),
+('0123456796', '2023008', 'Naila Syifa', 'female', 'Solo', '2017-06-30', 'active', 'Ibu Syifa', '081234561118');
+
+-- ============================================
+-- Insert Sample Student Enrollments (2 years)
+-- ============================================
+-- 2024/2025 Enrollments
+INSERT INTO student_enrollments (student_id, class_id) VALUES
+-- Grade 3 in 2024/2025 (Muhammad Rizki - now Grade 4)
+(1, 3), -- class_id 3 = Grade 3, 2024/2025
+-- Grade 3 in 2024/2025 (Aisyah Putri - now Grade 4)
+(2, 3),
+-- Grade 2 in 2024/2025 (Ahmad Hafidz - now Grade 3)
+(3, 2),
+-- Grade 2 in 2024/2025 (Fatimah Zahra - now Grade 3)
+(4, 2),
+-- Grade 1 in 2024/2025 (Umar Faruq - now Grade 2)
+(5, 1),
+-- Grade 2 in 2024/2025 (Zahra Kamila - now Grade 3)
+(6, 2),
+-- Grade 4 in 2024/2025 (Faris Maulana - now Grade 5)
+(7, 4),
+-- Grade 1 in 2024/2025 (Naila Syifa - now Grade 2)
+(8, 1);
+
+-- 2025/2026 Enrollments (Current Year)
+INSERT INTO student_enrollments (student_id, class_id) VALUES
+-- Grade 4 in 2025/2026 (Muhammad Rizki)
+(1, 10), -- class_id 10 = Grade 4, 2025/2026
+-- Grade 4 in 2025/2026 (Aisyah Putri)
+(2, 10),
+-- Grade 3 in 2025/2026 (Ahmad Hafidz)
+(3, 9),
+-- Grade 3 in 2025/2026 (Fatimah Zahra)
+(4, 9),
+-- Grade 2 in 2025/2026 (Umar Faruq)
+(5, 8),
+-- Grade 3 in 2025/2026 (Zahra Kamila)
+(6, 9),
+-- Grade 5 in 2025/2026 (Faris Maulana)
+(7, 11),
+-- Grade 2 in 2025/2026 (Naila Syifa)
+(8, 8);
 
 -- ============================================
 -- Insert Sample Alumni
