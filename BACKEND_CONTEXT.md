@@ -1,9 +1,9 @@
 # SD IT Rohmatul Ummah - Backend Development Context
 
-**Date:** January 24, 2026  
+**Date:** January 27, 2026  
 **Project:** Elementary School Website (SD IT Rohmatul Ummah)  
-**Timeline:** 4 days remaining until deployment  
-**Status:** Frontend complete, starting backend development
+**Timeline:** 1 day remaining until deployment  
+**Status:** ✅ Backend 95% Complete - 11 of 12 modules done (Downloads module skipped)
 
 ---
 
@@ -398,6 +398,184 @@ const handleSearch = async () => {
 Create in database after schema setup:
 - Email: `admin@sditrohmatulummah.sch.id`
 - Password: `Admin123!` (hash with bcrypt, change after first login)
+
+---
+
+## ✅ Completed Modules (11/12)
+
+### 1. Authentication ✅
+- JWT-based login/logout
+- Password hashing with bcrypt
+- Token refresh mechanism
+- Protected admin routes
+
+### 2. School Profile ✅
+- Key-value storage structure
+- CRUD operations for school data
+- Public read, admin write
+
+### 3. News Management ✅
+- Full CRUD with slug generation
+- Status management (draft/published)
+- Category filtering
+- Pagination and search
+- Dynamic field updates pattern
+
+### 4. Videos ✅
+- YouTube/Vimeo platform support
+- Thumbnail URL extraction
+- Category filtering
+- Public listing
+
+### 5. Photo Galleries ✅
+- Album-based organization
+- Smart image upload with Sharp
+- Duplicate detection via perceptual hash
+- Lightbox-ready responses
+
+### 6. Contact Messages ✅
+- Public submission endpoint
+- Admin viewing with filters
+- Status tracking (new/read/replied)
+- Email and phone validation
+
+### 7. Teachers ✅
+- Teacher and staff directory
+- Photo upload with duplicate detection
+- Status filtering (active/inactive/retired)
+- Subject specialization tracking
+
+### 8. Facilities ✅
+- Facility management with photos
+- Category classification (classroom/lab/sport/etc)
+- Condition tracking (good/fair/poor/damaged)
+- Year of acquisition tracking
+
+### 9. Achievements ✅
+- Achievement records
+- Category (academic/sport/art/other)
+- Level (school/district/city/province/national/international)
+- Year-based organization
+
+### 10. Students ✅ (NEW - Normalized Structure)
+- **Normalized database structure** to avoid bloat:
+  - `academic_years` table (e.g., "2024/2025")
+  - `classes` table (links grades to academic years)
+  - `student_enrollments` many-to-many (tracks history)
+- **Smart filtering** by academic year and grade
+- **Enrollment history** tracking across years
+- **Active year management** with transaction-based switching
+- Photo upload with duplicate detection
+- Public listing with privacy controls
+
+### 11. Alumni ✅ (NEW - Public Registration)
+- **Separate table** for graduated students
+- **Public self-registration** feature
+- **Admin approval workflow** (pending → approved/rejected)
+- Public endpoints show only approved alumni
+- Admin endpoints with full status filtering
+- Photo upload support
+
+### 12. Downloads ❌ (SKIPPED)
+- Client decided to skip this module
+
+---
+
+## Code Quality Patterns Implemented
+
+### 1. Enum Constants
+All database ENUMs exported as constants from `src/constants/`:
+```javascript
+export const NEWS_STATUS = {
+  draft: { value: 'draft', label: 'Draft' },
+  published: { value: 'published', label: 'Published' }
+};
+```
+
+### 2. Dynamic Field Updates (Loop Pattern)
+Models use `allowedFields` array to avoid repetitive if statements:
+```javascript
+const allowedFields = ['name', 'email', 'phone', 'address'];
+allowedFields.forEach(field => {
+  if (data[field] !== undefined) {
+    fields.push(`${field} = ?`);
+    values.push(data[field]);
+  }
+});
+```
+
+### 3. Smart Image Handling
+Uses `handleImageUpdate` function for duplicate detection:
+```javascript
+const result = await handleImageUpdate({
+  newImagePath: req.file.path,
+  oldImagePath: existingRecord.photo_url
+});
+// Returns: { finalPath, isDuplicate }
+// Compares perceptual hashes to avoid uploading identical images
+```
+
+### 4. Complex JOINs for Filtering
+Student model uses conditional JOINs:
+```javascript
+// Only JOIN enrollment tables when filtering by academic_year or grade
+if (academic_year || grade) {
+  query += ` INNER JOIN student_enrollments se ON s.id = se.student_id
+             INNER JOIN classes c ON se.class_id = c.id
+             INNER JOIN academic_years ay ON c.academic_year_id = ay.id`;
+}
+```
+
+### 5. Transaction-Based Operations
+Academic year activation uses MySQL transactions:
+```javascript
+const connection = await pool.getConnection();
+await connection.beginTransaction();
+try {
+  await connection.query('UPDATE academic_years SET is_active = FALSE');
+  await connection.query('UPDATE academic_years SET is_active = TRUE WHERE id = ?', [id]);
+  await connection.commit();
+} catch (error) {
+  await connection.rollback();
+  throw error;
+}
+```
+
+---
+
+## Database Structure (Normalized)
+
+### Academic Years & Student Enrollment
+```
+academic_years (id, year, is_active)
+    ↓
+classes (id, grade, academic_year_id)
+    ↓
+student_enrollments (student_id, class_id)  ← many-to-many junction
+    ↓
+students (nisn, nis, name, photo, parent_info, status)
+```
+
+**Benefits:**
+- No redundant class/year columns in students table
+- Full enrollment history tracking
+- Efficient filtering: `?academic_year=2024/2025&grade=5`
+- Single active year enforced by database
+
+---
+
+## API Documentation
+
+**📚 Complete API Reference:** See `/docs/API_DOCUMENTATION.md`
+
+Comprehensive documentation covering all 77 endpoints across 11 modules including:
+- Authentication & authorization
+- School profile management
+- Content management (news, videos, galleries)
+- Directory systems (teachers, students, alumni)
+- Facility & achievement tracking
+- Smart filtering & enrollment history
+- Public registration workflows
 
 ---
 
