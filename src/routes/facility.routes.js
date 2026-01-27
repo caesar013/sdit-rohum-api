@@ -22,8 +22,18 @@ router.get("/conditions", getConditions); // Get available conditions
 router.get("/:id", getFacilityById); // Get facility by ID
 
 // Protected routes - Admin only
-router.get("/admin/category-stats", authenticateToken, isAdmin, getCategoryCounts); // Get category counts
-router.get("/admin/condition-stats", authenticateToken, isAdmin, getConditionCounts); // Get condition counts
+router.get(
+  "/admin/category-stats",
+  authenticateToken,
+  isAdmin,
+  getCategoryCounts,
+); // Get category counts
+router.get(
+  "/admin/condition-stats",
+  authenticateToken,
+  isAdmin,
+  getConditionCounts,
+); // Get condition counts
 router.post(
   "/",
   authenticateToken,

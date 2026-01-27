@@ -189,9 +189,7 @@ export const createFacility = async (req, res, next) => {
     }
 
     // Get photo from upload if exists
-    const photo_url = req.file
-      ? `/uploads/photos/${req.file.filename}`
-      : null;
+    const photo_url = req.file ? `/uploads/photos/${req.file.filename}` : null;
 
     const facilityId = await Facility.create({
       name,

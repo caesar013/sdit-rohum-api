@@ -7,8 +7,12 @@ class Facility {
    * @returns {Promise<Object>} Facilities list with pagination
    */
   static async getAll(options = {}) {
-    const { page = 1, limit = 10, category = null, condition_status = null } =
-      options;
+    const {
+      page = 1,
+      limit = 10,
+      category = null,
+      condition_status = null,
+    } = options;
 
     const offset = (page - 1) * limit;
     let query = "SELECT * FROM facilities WHERE 1=1";
