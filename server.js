@@ -46,6 +46,9 @@ import contactRoutes from "./src/routes/contact.routes.js";
 import teacherRoutes from "./src/routes/teacher.routes.js";
 import facilityRoutes from "./src/routes/facility.routes.js";
 import achievementRoutes from "./src/routes/achievement.routes.js";
+import academicYearRoutes from "./src/routes/academicYears.routes.js";
+import studentRoutes from "./src/routes/students.routes.js";
+import alumniRoutes from "./src/routes/alumni.routes.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/school-profile", schoolProfileRoutes);
@@ -56,6 +59,9 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use("/api/facilities", facilityRoutes);
 app.use("/api/achievements", achievementRoutes);
+app.use("/api/academic-years", academicYearRoutes);
+app.use("/api/students", studentRoutes);
+app.use("/api/alumni", alumniRoutes);
 
 // 404 handler
 app.use((req, res) => {
