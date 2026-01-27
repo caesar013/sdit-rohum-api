@@ -36,7 +36,7 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Routes
+// Public Routes
 import authRoutes from "./src/routes/auth.routes.js";
 import schoolProfileRoutes from "./src/routes/schoolProfile.routes.js";
 import newsRoutes from "./src/routes/news.routes.js";
@@ -50,6 +50,20 @@ import academicYearRoutes from "./src/routes/academicYears.routes.js";
 import studentRoutes from "./src/routes/students.routes.js";
 import alumniRoutes from "./src/routes/alumni.routes.js";
 
+// Admin Routes
+import adminSchoolProfileRoutes from "./src/routes/admin/schoolProfile.routes.js";
+import adminNewsRoutes from "./src/routes/admin/news.routes.js";
+import adminVideoRoutes from "./src/routes/admin/video.routes.js";
+import adminGalleryRoutes from "./src/routes/admin/gallery.routes.js";
+import adminContactRoutes from "./src/routes/admin/contact.routes.js";
+import adminTeacherRoutes from "./src/routes/admin/teacher.routes.js";
+import adminFacilityRoutes from "./src/routes/admin/facility.routes.js";
+import adminAchievementRoutes from "./src/routes/admin/achievement.routes.js";
+import adminAcademicYearRoutes from "./src/routes/admin/academicYears.routes.js";
+import adminStudentRoutes from "./src/routes/admin/students.routes.js";
+import adminAlumniRoutes from "./src/routes/admin/alumni.routes.js";
+
+// Public API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/school-profile", schoolProfileRoutes);
 app.use("/api/news", newsRoutes);
@@ -62,6 +76,19 @@ app.use("/api/achievements", achievementRoutes);
 app.use("/api/academic-years", academicYearRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/alumni", alumniRoutes);
+
+// Admin API Routes
+app.use("/api/admin/school-profile", adminSchoolProfileRoutes);
+app.use("/api/admin/news", adminNewsRoutes);
+app.use("/api/admin/videos", adminVideoRoutes);
+app.use("/api/admin/gallery", adminGalleryRoutes);
+app.use("/api/admin/contact", adminContactRoutes);
+app.use("/api/admin/teachers", adminTeacherRoutes);
+app.use("/api/admin/facilities", adminFacilityRoutes);
+app.use("/api/admin/achievements", adminAchievementRoutes);
+app.use("/api/admin/academic-years", adminAcademicYearRoutes);
+app.use("/api/admin/students", adminStudentRoutes);
+app.use("/api/admin/alumni", adminAlumniRoutes);
 
 // 404 handler
 app.use((req, res) => {
