@@ -6,3 +6,5 @@
 export * from "./newsStatus.js";
 export * from "./newsCategory.js";
 export * from "./videoPlatform.js";
+export * from "./contactStatus.js";
+export * from "./teacherStatus.js";

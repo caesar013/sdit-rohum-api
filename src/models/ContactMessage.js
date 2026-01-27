@@ -1,4 +1,5 @@
 import pool from "../config/database.js";
+import { CONTACT_STATUS } from "../constants/contactStatus.js";
 
 class ContactMessage {
   /**
@@ -112,9 +113,9 @@ class ContactMessage {
     );
 
     const counts = {
-      unread: 0,
-      read: 0,
-      replied: 0,
+      [CONTACT_STATUS.UNREAD]: 0,
+      [CONTACT_STATUS.READ]: 0,
+      [CONTACT_STATUS.REPLIED]: 0,
       total: 0,
     };
 

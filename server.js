@@ -43,6 +43,7 @@ import newsRoutes from "./src/routes/news.routes.js";
 import videoRoutes from "./src/routes/video.routes.js";
 import galleryRoutes from "./src/routes/gallery.routes.js";
 import contactRoutes from "./src/routes/contact.routes.js";
+import teacherRoutes from "./src/routes/teacher.routes.js";
 
 app.use("/api/auth", authRoutes);
 app.use("/api/school-profile", schoolProfileRoutes);
@@ -50,6 +51,7 @@ app.use("/api/news", newsRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/gallery", galleryRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/teachers", teacherRoutes);
 
 // 404 handler
 app.use((req, res) => {

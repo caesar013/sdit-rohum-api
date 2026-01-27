@@ -1,4 +1,5 @@
 import ContactMessage from "../models/ContactMessage.js";
+import { CONTACT_STATUS_VALUES } from "../constants/contactStatus.js";
 
 /**
  * Get all messages (admin)
@@ -115,8 +116,7 @@ export const updateMessageStatus = async (req, res, next) => {
     const { status } = req.body;
 
     // Validate status
-    const validStatuses = ["unread", "read", "replied"];
-    if (!status || !validStatuses.includes(status)) {
+    if (!status || !CONTACT_STATUS_VALUES.includes(status)) {
       return res.status(400).json({
         success: false,
         message: "Status harus salah satu dari: unread, read, replied",
