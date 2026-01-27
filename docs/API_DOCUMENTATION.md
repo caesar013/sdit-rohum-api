@@ -35,9 +35,9 @@ Key-value based school information storage.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/school-profile` | Create new profile key-value | Yes |
-| PUT | `/api/school-profile/:key` | Update profile value by key | Yes |
-| DELETE | `/api/school-profile/:key` | Delete profile key-value | Yes |
+| POST | `/api/admin/school-profile` | Create new profile key-value | Yes |
+| PUT | `/api/admin/school-profile/:key` | Update profile value by key | Yes |
+| DELETE | `/api/admin/school-profile/:key` | Delete profile key-value | Yes |
 
 **Common Keys:** `school_name`, `address`, `phone`, `email`, `principal_name`, `vision`, `mission`, `accreditation`, `npsn`, `established_year`, `history`, etc.
 
@@ -67,9 +67,11 @@ News articles with categories, status management, and slug-based URLs.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/news` | Create new news article (with image upload) | Yes |
-| PUT | `/api/news/:id` | Update news article (with image upload) | Yes |
-| DELETE | `/api/news/:id` | Delete news article | Yes |
+| GET | `/api/admin/news` | Get all news (including drafts) | Yes |
+| GET | `/api/admin/news/:id` | Get news by ID (no view increment) | Yes |
+| POST | `/api/admin/news` | Create new news article (with image upload) | Yes |
+| PUT | `/api/admin/news/:id` | Update news article (with image upload) | Yes |
+| DELETE | `/api/admin/news/:id` | Delete news article | Yes |
 
 **Available Categories:** `academic`, `achievement`, `event`, `announcement`, `other`  
 **Available Status:** `draft`, `published`
@@ -99,9 +101,9 @@ Video gallery with YouTube/Vimeo support.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/videos` | Create new video | Yes |
-| PUT | `/api/videos/:id` | Update video | Yes |
-| DELETE | `/api/videos/:id` | Delete video | Yes |
+| POST | `/api/admin/videos` | Create new video | Yes |
+| PUT | `/api/admin/videos/:id` | Update video | Yes |
+| DELETE | `/api/admin/videos/:id` | Delete video | Yes |
 
 **Available Platforms:** `youtube`, `vimeo`  
 **Available Categories:** `profile`, `activity`, `achievement`, `event`, `other`
@@ -128,11 +130,14 @@ Photo albums with smart image upload and duplicate detection.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/gallery` | Create new photo album (with cover upload) | Yes |
-| PUT | `/api/gallery/:id` | Update album (with cover upload) | Yes |
-| DELETE | `/api/gallery/:id` | Delete album and all photos | Yes |
-| POST | `/api/gallery/:id/photos` | Add photo to album (with image upload) | Yes |
-| DELETE | `/api/gallery/:id/photos/:photoId` | Delete photo from album | Yes |
+| GET | `/api/admin/gallery/albums/:id` | Get album by ID | Yes |
+| POST | `/api/admin/gallery/albums` | Create new photo album (with cover upload) | Yes |
+| PUT | `/api/admin/gallery/albums/:id` | Update album (with cover upload) | Yes |
+| DELETE | `/api/admin/gallery/albums/:id` | Delete album and all photos | Yes |
+| POST | `/api/admin/gallery/albums/:albumId/photos` | Add photo to album (with image upload) | Yes |
+| PUT | `/api/admin/gallery/photos/:id` | Update photo (with image upload) | Yes |
+| DELETE | `/api/admin/gallery/photos/:id` | Delete photo from album | Yes |
+| PUT | `/api/admin/gallery/albums/:albumId/photos/reorder` | Reorder photos in album | Yes |
 
 **Features:** Perceptual hash-based duplicate detection, automatic image optimization
 
@@ -154,11 +159,11 @@ Contact form submissions from website visitors.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| GET | `/api/contact` | List all contact messages (pagination, status filter) | Yes |
-| GET | `/api/contact/statuses` | Get available message statuses | Yes |
-| GET | `/api/contact/:id` | Get single message by ID | Yes |
-| PUT | `/api/contact/:id` | Update message status | Yes |
-| DELETE | `/api/contact/:id` | Delete message | Yes |
+| GET | `/api/admin/contact` | List all contact messages (pagination, status filter) | Yes |
+| GET | `/api/admin/contact/stats` | Get message status counts | Yes |
+| GET | `/api/admin/contact/:id` | Get single message by ID | Yes |
+| PUT | `/api/admin/contact/:id/status` | Update message status | Yes |
+| DELETE | `/api/admin/contact/:id` | Delete message | Yes |
 
 **Available Status:** `new`, `read`, `replied`, `archived`
 
@@ -186,9 +191,10 @@ Teacher and staff directory with photos and specializations.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/teachers` | Create new teacher (with photo upload) | Yes |
-| PUT | `/api/teachers/:id` | Update teacher (with photo upload) | Yes |
-| DELETE | `/api/teachers/:id` | Delete teacher | Yes |
+| GET | `/api/admin/teachers/stats` | Get teacher status counts | Yes |
+| POST | `/api/admin/teachers` | Create new teacher (with photo upload) | Yes |
+| PUT | `/api/admin/teachers/:id` | Update teacher (with photo upload) | Yes |
+| DELETE | `/api/admin/teachers/:id` | Delete teacher | Yes |
 
 **Available Status:** `active`, `inactive`, `retired`
 
@@ -218,9 +224,11 @@ School facilities and infrastructure with condition tracking.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/facilities` | Create new facility (with photo upload) | Yes |
-| PUT | `/api/facilities/:id` | Update facility (with photo upload) | Yes |
-| DELETE | `/api/facilities/:id` | Delete facility | Yes |
+| GET | `/api/admin/facilities/category-stats` | Get facility counts by category | Yes |
+| GET | `/api/admin/facilities/condition-stats` | Get facility counts by condition | Yes |
+| POST | `/api/admin/facilities` | Create new facility (with photo upload) | Yes |
+| PUT | `/api/admin/facilities/:id` | Update facility (with photo upload) | Yes |
+| DELETE | `/api/admin/facilities/:id` | Delete facility | Yes |
 
 **Available Categories:** `classroom`, `laboratory`, `library`, `mosque`, `sport_facility`, `office`, `canteen`, `toilet`, `parking`, `other`  
 **Available Conditions:** `good`, `fair`, `poor`, `damaged`
@@ -252,9 +260,11 @@ School achievements with categorization by type and level.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/achievements` | Create new achievement | Yes |
-| PUT | `/api/achievements/:id` | Update achievement | Yes |
-| DELETE | `/api/achievements/:id` | Delete achievement | Yes |
+| GET | `/api/admin/achievements/category-stats` | Get achievement counts by category | Yes |
+| GET | `/api/admin/achievements/level-stats` | Get achievement counts by level | Yes |
+| POST | `/api/admin/achievements` | Create new achievement | Yes |
+| PUT | `/api/admin/achievements/:id` | Update achievement | Yes |
+| DELETE | `/api/admin/achievements/:id` | Delete achievement | Yes |
 
 **Available Categories:** `academic`, `sport`, `art`, `other`  
 **Available Levels:** `school`, `district`, `city`, `province`, `national`, `international`
@@ -277,9 +287,9 @@ Academic year management with active year tracking.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/academic-years` | Create new academic year | Yes |
-| PUT | `/api/academic-years/:id/activate` | Set as active academic year (transaction-based) | Yes |
-| DELETE | `/api/academic-years/:id` | Delete academic year (cannot delete active year) | Yes |
+| POST | `/api/admin/academic-years` | Create new academic year | Yes |
+| PUT | `/api/admin/academic-years/:id/activate` | Set as active academic year (transaction-based) | Yes |
+| DELETE | `/api/admin/academic-years/:id` | Delete academic year (cannot delete active year) | Yes |
 
 **Format:** Academic years use format like "2024/2025"  
 **Active Year:** Only one academic year can be active at a time
@@ -313,11 +323,11 @@ Student directory with normalized enrollment structure and history tracking.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/students` | Create new student (with photo upload) | Yes |
-| PUT | `/api/students/:id` | Update student (with photo upload) | Yes |
-| DELETE | `/api/students/:id` | Delete student | Yes |
-| POST | `/api/students/:id/enroll` | Enroll student in class | Yes |
-| DELETE | `/api/students/:id/enroll/:class_id` | Unenroll student from class | Yes |
+| POST | `/api/admin/students` | Create new student (with photo upload) | Yes |
+| PUT | `/api/admin/students/:id` | Update student (with photo upload) | Yes |
+| DELETE | `/api/admin/students/:id` | Delete student | Yes |
+| POST | `/api/admin/students/:id/enroll` | Enroll student in class | Yes |
+| DELETE | `/api/admin/students/:id/enroll/:class_id` | Unenroll student from class | Yes |
 
 **Available Status:** `active`, `inactive`, `graduated`, `transferred`  
 **Database Structure:** Normalized with `academic_years → classes → student_enrollments` for history tracking
@@ -349,10 +359,10 @@ Alumni directory with public self-registration and admin approval workflow.
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| GET | `/api/alumni/admin/status-counts` | Get registration status counts | Yes |
-| PUT | `/api/alumni/:id` | Update alumni (with photo upload) | Yes |
-| PUT | `/api/alumni/:id/status` | Update registration status (approve/reject) | Yes |
-| DELETE | `/api/alumni/:id` | Delete alumni | Yes |
+| GET | `/api/admin/alumni/status-counts` | Get registration status counts | Yes |
+| PUT | `/api/admin/alumni/:id` | Update alumni (with photo upload) | Yes |
+| PUT | `/api/admin/alumni/:id/status` | Update registration status (approve/reject) | Yes |
+| DELETE | `/api/admin/alumni/:id` | Delete alumni | Yes |
 
 **Available Status:** `pending`, `approved`, `rejected`  
 **Workflow:** Public registration → pending → admin approves/rejects → public visibility
@@ -371,12 +381,12 @@ All file uploads use `multipart/form-data` encoding.
 - **Storage:** `/uploads/{module}/` directory
 
 ### Supported Modules with Image Upload
-- News: `POST/PUT /api/news` (field: `image`)
-- Teachers: `POST/PUT /api/teachers` (field: `photo`)
-- Facilities: `POST/PUT /api/facilities` (field: `photo`)
-- Photo Galleries: `POST /api/gallery` (album cover), `POST /api/gallery/:id/photos` (photos)
-- Students: `POST/PUT /api/students` (field: `photo`)
-- Alumni: `POST/PUT /api/alumni` (field: `photo`)
+- News: `POST/PUT /api/admin/news` (field: `featured_image`)
+- Teachers: `POST/PUT /api/admin/teachers` (field: `photo`)
+- Facilities: `POST/PUT /api/admin/facilities` (field: `photo`)
+- Photo Galleries: `POST /api/admin/gallery/albums` (cover_photo), `POST /api/admin/gallery/albums/:albumId/photos` (photo)
+- Students: `POST/PUT /api/admin/students` (field: `photo`)
+- Alumni: `POST /api/alumni` (public), `PUT /api/admin/alumni/:id` (admin) (field: `photo`)
 
 ---
 
