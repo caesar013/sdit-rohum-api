@@ -62,6 +62,7 @@ import adminAchievementRoutes from "./src/routes/admin/achievement.routes.js";
 import adminAcademicYearRoutes from "./src/routes/admin/academicYears.routes.js";
 import adminStudentRoutes from "./src/routes/admin/students.routes.js";
 import adminAlumniRoutes from "./src/routes/admin/alumni.routes.js";
+import adminCommentRoutes from "./src/routes/admin/comments.routes.js";
 
 // Public API Routes
 app.use("/api/auth", authRoutes);
@@ -89,6 +90,7 @@ app.use("/api/admin/achievements", adminAchievementRoutes);
 app.use("/api/admin/academic-years", adminAcademicYearRoutes);
 app.use("/api/admin/students", adminStudentRoutes);
 app.use("/api/admin/alumni", adminAlumniRoutes);
+app.use("/api/admin/comments", adminCommentRoutes);
 
 // 404 handler
 app.use((req, res) => {
