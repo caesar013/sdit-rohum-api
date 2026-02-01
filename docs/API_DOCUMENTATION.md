@@ -1,6 +1,6 @@
 # SD IT Rohmatul Ummah - Backend API Documentation
 
-**Last Updated:** January 27, 2026  
+**Last Updated:** February 1, 2026  
 **Version:** 1.0  
 **Base URL:** `http://localhost:3000/api` (development)
 
@@ -15,8 +15,10 @@ All admin endpoints require JWT authentication via `Authorization: Bearer <token
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
 | POST | `/api/auth/login` | Admin login with username/password | No |
-| POST | `/api/auth/register` | Register new admin account | No |
-| GET | `/api/auth/me` | Get current authenticated user | Yes |
+| GET | `/api/auth/profile` | Get current authenticated user profile | Yes |
+| POST | `/api/auth/logout` | Logout and invalidate token | Yes |
+
+**Note:** Admin accounts must be created directly in the database. There is no public registration endpoint for security reasons.
 
 ---
 
@@ -53,15 +55,14 @@ News articles with categories, status management, and slug-based URLs.
 |--------|----------|-------------|---------------|
 | GET | `/api/news` | List all published news (pagination, search, category filter) | No |
 | GET | `/api/news/categories` | Get available news categories | No |
-| GET | `/api/news/slug/:slug` | Get single news article by slug | No |
-| GET | `/api/news/:id` | Get single news article by ID | No |
+| GET | `/api/news/statuses` | Get available news statuses | No |
+| GET | `/api/news/slug/:slug` | Get single news article by slug (increments views) | No |
 
 **Query Parameters:**
 - `page` - Page number (default: 1)
 - `limit` - Items per page (default: 10)
 - `search` - Search in title/content
 - `category` - Filter by category
-- `status` - Filter by status (admin only)
 
 ### Admin Endpoints
 
@@ -75,6 +76,38 @@ News articles with categories, status management, and slug-based URLs.
 
 **Available Categories:** `academic`, `achievement`, `event`, `announcement`, `other`  
 **Available Status:** `draft`, `published`
+
+---
+
+## News Comments
+
+Comment system for news articles with approval workflow.
+
+### Public Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/news/:newsId/comments` | Get comments for a news article (approved only for public, all for admin) | Optional |
+| POST | `/api/news/:newsId/comments` | Submit a comment (auto-set to pending status) | No |
+
+### Admin Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/admin/comments` | Get all comments with filters (pagination, status, news_id) | Yes |
+| GET | `/api/admin/comments/:id` | Get single comment by ID | Yes |
+| PUT | `/api/admin/comments/:id/status` | Update comment status (approve/reject/pending) | Yes |
+| DELETE | `/api/admin/comments/:id` | Delete comment | Yes |
+| GET | `/api/admin/comments/news/:newsId/stats` | Get status counts for a news article | Yes |
+
+**Query Parameters (GET all comments):**
+- `page` - Page number (default: 1)
+- `limit` - Items per page (default: 20)
+- `status` - Filter by status (pending/approved/rejected)
+- `news_id` - Filter by news article ID
+
+**Available Status:** `pending`, `approved`, `rejected`  
+**Workflow:** Public submits → pending → admin approves/rejects → public visibility
 
 ---
 
@@ -525,9 +558,10 @@ Critical operations (e.g., setting active academic year) use MySQL transactions.
 
 | Module | Status | Routes | Features |
 |--------|--------|--------|----------|
-| Authentication | ✅ Complete | 3 | JWT, bcrypt, token refresh |
+| Authentication | ✅ Complete | 3 | JWT, bcrypt, logout |
 | School Profile | ✅ Complete | 5 | Key-value storage |
 | News | ✅ Complete | 6 | Slug, status, categories |
+| News Comments | ✅ Complete | 7 | Approval workflow, public submission |
 | Videos | ✅ Complete | 6 | YouTube/Vimeo, categories |
 | Galleries | ✅ Complete | 6 | Albums, duplicate detection |
 | Contact | ✅ Complete | 6 | Form submission, status tracking |
@@ -537,4 +571,4 @@ Critical operations (e.g., setting active academic year) use MySQL transactions.
 | Academic Years | ✅ Complete | 6 | Active year management |
 | Students | ✅ Complete | 9 | Normalized enrollment, history |
 | Alumni | ✅ Complete | 8 | Public registration, approval |
-| **Total** | **11/12** | **77** | Downloads skipped |
+| **Total** | **12/12** | **84** | All modules complete |
