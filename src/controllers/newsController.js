@@ -13,6 +13,10 @@ import {
 } from "../constants/newsCategory.js";
 import { deleteFile } from "../utils/fileHelper.js";
 import { handleImageUpdate } from "../utils/imageHelper.js";
+import {
+  transformImageUrls,
+  transformImageUrlsArray,
+} from "../utils/urlHelper.js";
 
 /**
  * Get all available news categories
@@ -69,9 +73,15 @@ export const getAll = async (req, res, next) => {
       search: search || null,
     });
 
+    // Transform image URLs to full URLs
+    const transformedData = transformImageUrlsArray(result.data, [
+      "featured_image",
+    ]);
+
     res.json({
       success: true,
-      ...result,
+      data: transformedData,
+      pagination: result.pagination,
     });
   } catch (error) {
     next(error);
@@ -93,9 +103,15 @@ export const getAllAdmin = async (req, res, next) => {
       search: search || null,
     });
 
+    // Transform image URLs to full URLs
+    const transformedData = transformImageUrlsArray(result.data, [
+      "featured_image",
+    ]);
+
     res.json({
       success: true,
-      ...result,
+      data: transformedData,
+      pagination: result.pagination,
     });
   } catch (error) {
     next(error);
@@ -130,9 +146,12 @@ export const getBySlug = async (req, res, next) => {
     await News.incrementViews(news.id);
     news.views += 1;
 
+    // Transform image URL to full URL
+    const transformedNews = transformImageUrls(news, ["featured_image"]);
+
     res.json({
       success: true,
-      data: news,
+      data: transformedNews,
     });
   } catch (error) {
     next(error);
@@ -155,9 +174,12 @@ export const getById = async (req, res, next) => {
       });
     }
 
+    // Transform image URL to full URL
+    const transformedNews = transformImageUrls(news, ["featured_image"]);
+
     res.json({
       success: true,
-      data: news,
+      data: transformedNews,
     });
   } catch (error) {
     next(error);
@@ -209,10 +231,13 @@ export const create = async (req, res, next) => {
 
     const news = await News.getById(newsId);
 
+    // Transform image URL to full URL
+    const transformedNews = transformImageUrls(news, ["featured_image"]);
+
     res.status(201).json({
       success: true,
       message: "Berita berhasil dibuat",
-      data: news,
+      data: transformedNews,
     });
   } catch (error) {
     // Clean up uploaded file if error occurs
@@ -296,10 +321,13 @@ export const update = async (req, res, next) => {
 
     const updated = await News.getById(id);
 
+    // Transform image URL to full URL
+    const transformedNews = transformImageUrls(updated, ["featured_image"]);
+
     res.json({
       success: true,
       message: "Berita berhasil diupdate",
-      data: updated,
+      data: transformedNews,
     });
   } catch (error) {
     // Clean up uploaded file if error occurs

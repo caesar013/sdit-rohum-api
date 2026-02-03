@@ -7,6 +7,10 @@ import {
 } from "../constants/index.js";
 import { deleteFile } from "../utils/fileHelper.js";
 import { handleImageUpdate } from "../utils/imageHelper.js";
+import {
+  transformImageUrls,
+  transformImageUrlsArray,
+} from "../utils/urlHelper.js";
 
 /**
  * Get all facilities (public)

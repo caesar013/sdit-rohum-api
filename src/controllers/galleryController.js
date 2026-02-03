@@ -1,6 +1,10 @@
 import PhotoAlbum from "../models/PhotoAlbum.js";
 import Photo from "../models/Photo.js";
 import { deleteFile } from "../utils/fileHelper.js";
+import {
+  transformImageUrls,
+  transformImageUrlsArray,
+} from "../utils/urlHelper.js";
 
 /**
  * Get all albums (public)

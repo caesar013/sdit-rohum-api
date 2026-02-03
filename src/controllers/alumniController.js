@@ -1,6 +1,10 @@
 import Alumni from "../models/Alumni.js";
 import { handleImageUpdate } from "../utils/imageHelper.js";
 import { ALUMNI_STATUS } from "../constants/index.js";
+import {
+  transformImageUrls,
+  transformImageUrlsArray,
+} from "../utils/urlHelper.js";
 
 /**
  * Get all alumni

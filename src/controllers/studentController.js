@@ -3,6 +3,10 @@ import StudentEnrollment from "../models/StudentEnrollment.js";
 import Class from "../models/Class.js";
 import { handleImageUpdate } from "../utils/imageHelper.js";
 import { STUDENT_STATUS } from "../constants/index.js";
+import {
+  transformImageUrls,
+  transformImageUrlsArray,
+} from "../utils/urlHelper.js";
 
 /**
  * Get all students with filters
