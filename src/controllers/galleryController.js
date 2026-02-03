@@ -18,9 +18,13 @@ export const getAllAlbums = async (req, res, next) => {
       limit: parseInt(limit) || 10,
     });
 
+    // Transform cover_photo in albums
+    const transformedData = transformImageUrlsArray(result.data, ['cover_photo']);
+
     res.json({
       success: true,
-      ...result,
+      data: transformedData,
+      pagination: result.pagination,
     });
   } catch (error) {
     next(error);
@@ -42,9 +46,15 @@ export const getAlbumBySlug = async (req, res, next) => {
       });
     }
 
+    // Transform cover_photo for album and photo_url for photos
+    const transformedAlbum = transformImageUrls(album, ['cover_photo']);
+    if (transformedAlbum.photos && transformedAlbum.photos.length > 0) {
+      transformedAlbum.photos = transformImageUrlsArray(transformedAlbum.photos, ['photo_url']);
+    }
+
     res.json({
       success: true,
-      data: album,
+      data: transformedAlbum,
     });
   } catch (error) {
     next(error);
@@ -66,9 +76,15 @@ export const getAlbumById = async (req, res, next) => {
       });
     }
 
+    // Transform cover_photo for album and photo_url for photos
+    const transformedAlbum = transformImageUrls(album, ['cover_photo']);
+    if (transformedAlbum.photos && transformedAlbum.photos.length > 0) {
+      transformedAlbum.photos = transformImageUrlsArray(transformedAlbum.photos, ['photo_url']);
+    }
+
     res.json({
       success: true,
-      data: album,
+      data: transformedAlbum,
     });
   } catch (error) {
     next(error);
@@ -103,11 +119,12 @@ export const createAlbum = async (req, res, next) => {
     });
 
     const album = await PhotoAlbum.getById(albumId);
+    const transformedAlbum = transformImageUrls(album, ['cover_photo']);
 
     res.status(201).json({
       success: true,
       message: "Album berhasil dibuat",
-      data: album,
+      data: transformedAlbum,
     });
   } catch (error) {
     // Clean up uploaded file if error occurs
@@ -155,11 +172,12 @@ export const updateAlbum = async (req, res, next) => {
     });
 
     const updated = await PhotoAlbum.getById(id);
+    const transformedAlbum = transformImageUrls(updated, ['cover_photo']);
 
     res.json({
       success: true,
       message: "Album berhasil diupdate",
-      data: updated,
+      data: transformedAlbum,
     });
   } catch (error) {
     if (req.file) {
@@ -245,11 +263,12 @@ export const addPhoto = async (req, res, next) => {
     });
 
     const photo = await Photo.getById(photoId);
+    const transformedPhoto = transformImageUrls(photo, ['photo_url']);
 
     res.status(201).json({
       success: true,
       message: "Foto berhasil ditambahkan",
-      data: photo,
+      data: transformedPhoto,
     });
   } catch (error) {
     if (req.file) {
@@ -295,11 +314,12 @@ export const updatePhoto = async (req, res, next) => {
     });
 
     const updated = await Photo.getById(id);
+    const transformedPhoto = transformImageUrls(updated, ['photo_url']);
 
     res.json({
       success: true,
       message: "Foto berhasil diupdate",
-      data: updated,
+      data: transformedPhoto,
     });
   } catch (error) {
     if (req.file) {

@@ -45,9 +45,12 @@ export const getAllFacilities = async (req, res, next) => {
       condition_status,
     });
 
+    const transformedData = transformImageUrlsArray(result.data, ['photo_url']);
+
     res.json({
       success: true,
-      ...result,
+      data: transformedData,
+      pagination: result.pagination,
     });
   } catch (error) {
     next(error);
@@ -69,9 +72,11 @@ export const getFacilityById = async (req, res, next) => {
       });
     }
 
+    const transformedFacility = transformImageUrls(facility, ['photo_url']);
+
     res.json({
       success: true,
-      data: facility,
+      data: transformedFacility,
     });
   } catch (error) {
     next(error);
@@ -205,11 +210,12 @@ export const createFacility = async (req, res, next) => {
     });
 
     const facility = await Facility.getById(facilityId);
+    const transformedFacility = transformImageUrls(facility, ['photo_url']);
 
     res.status(201).json({
       success: true,
       message: "Fasilitas berhasil ditambahkan",
-      data: facility,
+      data: transformedFacility,
     });
   } catch (error) {
     if (req.file) {
@@ -293,11 +299,12 @@ export const updateFacility = async (req, res, next) => {
     });
 
     const updated = await Facility.getById(id);
+    const transformedFacility = transformImageUrls(updated, ['photo_url']);
 
     res.json({
       success: true,
       message: "Fasilitas berhasil diupdate",
-      data: updated,
+      data: transformedFacility,
     });
   } catch (error) {
     if (req.file) {

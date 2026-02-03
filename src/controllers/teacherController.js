@@ -28,9 +28,12 @@ export const getAllTeachers = async (req, res, next) => {
       status,
     });
 
+    const transformedData = transformImageUrlsArray(result.data, ['photo_url']);
+
     res.json({
       success: true,
-      ...result,
+      data: transformedData,
+      pagination: result.pagination,
     });
   } catch (error) {
     next(error);
@@ -52,9 +55,11 @@ export const getTeacherById = async (req, res, next) => {
       });
     }
 
+    const transformedTeacher = transformImageUrls(teacher, ['photo_url']);
+
     res.json({
       success: true,
-      data: teacher,
+      data: transformedTeacher,
     });
   } catch (error) {
     next(error);
@@ -154,11 +159,12 @@ export const createTeacher = async (req, res, next) => {
     });
 
     const teacher = await Teacher.getById(teacherId);
+    const transformedTeacher = transformImageUrls(teacher, ['photo_url']);
 
     res.status(201).json({
       success: true,
       message: "Guru berhasil ditambahkan",
-      data: teacher,
+      data: transformedTeacher,
     });
   } catch (error) {
     if (req.file) {
@@ -243,11 +249,12 @@ export const updateTeacher = async (req, res, next) => {
     });
 
     const updated = await Teacher.getById(id);
+    const transformedTeacher = transformImageUrls(updated, ['photo_url']);
 
     res.json({
       success: true,
       message: "Data guru berhasil diupdate",
-      data: updated,
+      data: transformedTeacher,
     });
   } catch (error) {
     if (req.file) {

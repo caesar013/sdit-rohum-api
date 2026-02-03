@@ -26,9 +26,11 @@ export const getAllStudents = async (req, res) => {
 
     const result = await Student.getAll(options);
 
+    const transformedData = transformImageUrlsArray(result.data, ['photo']);
+
     res.json({
       success: true,
-      data: result.data,
+      data: transformedData,
       pagination: result.pagination,
     });
   } catch (error) {
@@ -55,9 +57,10 @@ export const getStudentById = async (req, res) => {
       });
     }
 
+    const transformedStudent = transformImageUrls(student, ['photo']);
     res.json({
       success: true,
-      data: student,
+      data: transformedStudent,
     });
   } catch (error) {
     console.error("Error fetching student:", error);
@@ -182,11 +185,12 @@ export const createStudent = async (req, res) => {
     }
 
     const newStudent = await Student.getById(studentId);
+    const transformedStudent = transformImageUrls(newStudent, ['photo']);
 
     res.status(201).json({
       success: true,
       message: "Student created successfully",
-      data: newStudent,
+      data: transformedStudent,
     });
   } catch (error) {
     console.error("Error creating student:", error);
@@ -243,11 +247,12 @@ export const updateStudent = async (req, res) => {
     }
 
     const updatedStudent = await Student.getById(id);
+    const transformedStudent = transformImageUrls(updatedStudent, ['photo']);
 
     res.json({
       success: true,
       message: "Student updated successfully",
-      data: updatedStudent,
+      data: transformedStudent,
     });
   } catch (error) {
     console.error("Error updating student:", error);

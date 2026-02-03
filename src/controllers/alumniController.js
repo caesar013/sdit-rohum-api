@@ -27,10 +27,11 @@ export const getAllAlumni = async (req, res) => {
     };
 
     const result = await Alumni.getAll(options);
+    const transformedData = transformImageUrlsArray(result.data, ['photo_url']);
 
     res.json({
       success: true,
-      data: result.data,
+      data: transformedData,
       pagination: result.pagination,
     });
   } catch (error) {
@@ -66,9 +67,10 @@ export const getAlumniById = async (req, res) => {
       });
     }
 
+    const transformedAlumni = transformImageUrls(alumni, ['photo_url']);
     res.json({
       success: true,
-      data: alumni,
+      data: transformedAlumni,
     });
   } catch (error) {
     console.error("Error fetching alumni:", error);
@@ -131,12 +133,13 @@ export const createAlumni = async (req, res) => {
 
     const alumniId = await Alumni.create(alumniData);
     const newAlumni = await Alumni.getById(alumniId);
+    const transformedAlumni = transformImageUrls(newAlumni, ['photo_url']);
 
     res.status(201).json({
       success: true,
       message:
         "Alumni registration submitted successfully. Awaiting admin approval.",
-      data: newAlumni,
+      data: transformedAlumni,
     });
   } catch (error) {
     console.error("Error creating alumni:", error);
@@ -193,11 +196,12 @@ export const updateAlumni = async (req, res) => {
     }
 
     const updatedAlumni = await Alumni.getById(id);
+    const transformedAlumni = transformImageUrls(updatedAlumni, ['photo_url']);
 
     res.json({
       success: true,
       message: "Alumni updated successfully",
-      data: updatedAlumni,
+      data: transformedAlumni,
     });
   } catch (error) {
     console.error("Error updating alumni:", error);
@@ -252,11 +256,12 @@ export const updateAlumniStatus = async (req, res) => {
 
     await Alumni.update(id, { registration_status });
     const updatedAlumni = await Alumni.getById(id);
+    const transformedAlumni = transformImageUrls(updatedAlumni, ['photo_url']);
 
     res.json({
       success: true,
       message: "Alumni status updated successfully",
-      data: updatedAlumni,
+      data: transformedAlumni,
     });
   } catch (error) {
     console.error("Error updating alumni status:", error);
