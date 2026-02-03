@@ -5,7 +5,10 @@ import {
 } from "../constants/teacherStatus.js";
 import { deleteFile } from "../utils/fileHelper.js";
 import { handleImageUpdate } from "../utils/imageHelper.js";
-import { transformImageUrls, transformImageUrlsArray } from "../utils/urlHelper.js";
+import {
+  transformImageUrls,
+  transformImageUrlsArray,
+} from "../utils/urlHelper.js";
 
 /**
  * Get all teachers (public)
@@ -28,7 +31,7 @@ export const getAllTeachers = async (req, res, next) => {
       status,
     });
 
-    const transformedData = transformImageUrlsArray(result.data, ['photo_url']);
+    const transformedData = transformImageUrlsArray(result.data, ["photo_url"]);
 
     res.json({
       success: true,
@@ -55,7 +58,7 @@ export const getTeacherById = async (req, res, next) => {
       });
     }
 
-    const transformedTeacher = transformImageUrls(teacher, ['photo_url']);
+    const transformedTeacher = transformImageUrls(teacher, ["photo_url"]);
 
     res.json({
       success: true,
@@ -159,7 +162,7 @@ export const createTeacher = async (req, res, next) => {
     });
 
     const teacher = await Teacher.getById(teacherId);
-    const transformedTeacher = transformImageUrls(teacher, ['photo_url']);
+    const transformedTeacher = transformImageUrls(teacher, ["photo_url"]);
 
     res.status(201).json({
       success: true,
@@ -249,7 +252,7 @@ export const updateTeacher = async (req, res, next) => {
     });
 
     const updated = await Teacher.getById(id);
-    const transformedTeacher = transformImageUrls(updated, ['photo_url']);
+    const transformedTeacher = transformImageUrls(updated, ["photo_url"]);
 
     res.json({
       success: true,

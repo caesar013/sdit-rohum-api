@@ -19,7 +19,9 @@ export const getAllAlbums = async (req, res, next) => {
     });
 
     // Transform cover_photo in albums
-    const transformedData = transformImageUrlsArray(result.data, ['cover_photo']);
+    const transformedData = transformImageUrlsArray(result.data, [
+      "cover_photo",
+    ]);
 
     res.json({
       success: true,
@@ -47,9 +49,12 @@ export const getAlbumBySlug = async (req, res, next) => {
     }
 
     // Transform cover_photo for album and photo_url for photos
-    const transformedAlbum = transformImageUrls(album, ['cover_photo']);
+    const transformedAlbum = transformImageUrls(album, ["cover_photo"]);
     if (transformedAlbum.photos && transformedAlbum.photos.length > 0) {
-      transformedAlbum.photos = transformImageUrlsArray(transformedAlbum.photos, ['photo_url']);
+      transformedAlbum.photos = transformImageUrlsArray(
+        transformedAlbum.photos,
+        ["photo_url"],
+      );
     }
 
     res.json({
@@ -77,9 +82,12 @@ export const getAlbumById = async (req, res, next) => {
     }
 
     // Transform cover_photo for album and photo_url for photos
-    const transformedAlbum = transformImageUrls(album, ['cover_photo']);
+    const transformedAlbum = transformImageUrls(album, ["cover_photo"]);
     if (transformedAlbum.photos && transformedAlbum.photos.length > 0) {
-      transformedAlbum.photos = transformImageUrlsArray(transformedAlbum.photos, ['photo_url']);
+      transformedAlbum.photos = transformImageUrlsArray(
+        transformedAlbum.photos,
+        ["photo_url"],
+      );
     }
 
     res.json({
@@ -119,7 +127,7 @@ export const createAlbum = async (req, res, next) => {
     });
 
     const album = await PhotoAlbum.getById(albumId);
-    const transformedAlbum = transformImageUrls(album, ['cover_photo']);
+    const transformedAlbum = transformImageUrls(album, ["cover_photo"]);
 
     res.status(201).json({
       success: true,
@@ -172,7 +180,7 @@ export const updateAlbum = async (req, res, next) => {
     });
 
     const updated = await PhotoAlbum.getById(id);
-    const transformedAlbum = transformImageUrls(updated, ['cover_photo']);
+    const transformedAlbum = transformImageUrls(updated, ["cover_photo"]);
 
     res.json({
       success: true,
@@ -263,7 +271,7 @@ export const addPhoto = async (req, res, next) => {
     });
 
     const photo = await Photo.getById(photoId);
-    const transformedPhoto = transformImageUrls(photo, ['photo_url']);
+    const transformedPhoto = transformImageUrls(photo, ["photo_url"]);
 
     res.status(201).json({
       success: true,
@@ -314,7 +322,7 @@ export const updatePhoto = async (req, res, next) => {
     });
 
     const updated = await Photo.getById(id);
-    const transformedPhoto = transformImageUrls(updated, ['photo_url']);
+    const transformedPhoto = transformImageUrls(updated, ["photo_url"]);
 
     res.json({
       success: true,

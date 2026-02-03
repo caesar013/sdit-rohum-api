@@ -45,7 +45,7 @@ export const getAllFacilities = async (req, res, next) => {
       condition_status,
     });
 
-    const transformedData = transformImageUrlsArray(result.data, ['photo_url']);
+    const transformedData = transformImageUrlsArray(result.data, ["photo_url"]);
 
     res.json({
       success: true,
@@ -72,7 +72,7 @@ export const getFacilityById = async (req, res, next) => {
       });
     }
 
-    const transformedFacility = transformImageUrls(facility, ['photo_url']);
+    const transformedFacility = transformImageUrls(facility, ["photo_url"]);
 
     res.json({
       success: true,
@@ -210,7 +210,7 @@ export const createFacility = async (req, res, next) => {
     });
 
     const facility = await Facility.getById(facilityId);
-    const transformedFacility = transformImageUrls(facility, ['photo_url']);
+    const transformedFacility = transformImageUrls(facility, ["photo_url"]);
 
     res.status(201).json({
       success: true,
@@ -299,7 +299,7 @@ export const updateFacility = async (req, res, next) => {
     });
 
     const updated = await Facility.getById(id);
-    const transformedFacility = transformImageUrls(updated, ['photo_url']);
+    const transformedFacility = transformImageUrls(updated, ["photo_url"]);
 
     res.json({
       success: true,

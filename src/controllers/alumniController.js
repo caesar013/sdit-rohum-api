@@ -27,7 +27,7 @@ export const getAllAlumni = async (req, res) => {
     };
 
     const result = await Alumni.getAll(options);
-    const transformedData = transformImageUrlsArray(result.data, ['photo_url']);
+    const transformedData = transformImageUrlsArray(result.data, ["photo_url"]);
 
     res.json({
       success: true,
@@ -67,7 +67,7 @@ export const getAlumniById = async (req, res) => {
       });
     }
 
-    const transformedAlumni = transformImageUrls(alumni, ['photo_url']);
+    const transformedAlumni = transformImageUrls(alumni, ["photo_url"]);
     res.json({
       success: true,
       data: transformedAlumni,
@@ -133,7 +133,7 @@ export const createAlumni = async (req, res) => {
 
     const alumniId = await Alumni.create(alumniData);
     const newAlumni = await Alumni.getById(alumniId);
-    const transformedAlumni = transformImageUrls(newAlumni, ['photo_url']);
+    const transformedAlumni = transformImageUrls(newAlumni, ["photo_url"]);
 
     res.status(201).json({
       success: true,
@@ -196,7 +196,7 @@ export const updateAlumni = async (req, res) => {
     }
 
     const updatedAlumni = await Alumni.getById(id);
-    const transformedAlumni = transformImageUrls(updatedAlumni, ['photo_url']);
+    const transformedAlumni = transformImageUrls(updatedAlumni, ["photo_url"]);
 
     res.json({
       success: true,
@@ -256,7 +256,7 @@ export const updateAlumniStatus = async (req, res) => {
 
     await Alumni.update(id, { registration_status });
     const updatedAlumni = await Alumni.getById(id);
-    const transformedAlumni = transformImageUrls(updatedAlumni, ['photo_url']);
+    const transformedAlumni = transformImageUrls(updatedAlumni, ["photo_url"]);
 
     res.json({
       success: true,

@@ -26,7 +26,7 @@ export const getAllStudents = async (req, res) => {
 
     const result = await Student.getAll(options);
 
-    const transformedData = transformImageUrlsArray(result.data, ['photo']);
+    const transformedData = transformImageUrlsArray(result.data, ["photo"]);
 
     res.json({
       success: true,
@@ -57,7 +57,7 @@ export const getStudentById = async (req, res) => {
       });
     }
 
-    const transformedStudent = transformImageUrls(student, ['photo']);
+    const transformedStudent = transformImageUrls(student, ["photo"]);
     res.json({
       success: true,
       data: transformedStudent,
@@ -185,7 +185,7 @@ export const createStudent = async (req, res) => {
     }
 
     const newStudent = await Student.getById(studentId);
-    const transformedStudent = transformImageUrls(newStudent, ['photo']);
+    const transformedStudent = transformImageUrls(newStudent, ["photo"]);
 
     res.status(201).json({
       success: true,
@@ -247,7 +247,7 @@ export const updateStudent = async (req, res) => {
     }
 
     const updatedStudent = await Student.getById(id);
-    const transformedStudent = transformImageUrls(updatedStudent, ['photo']);
+    const transformedStudent = transformImageUrls(updatedStudent, ["photo"]);
 
     res.json({
       success: true,
