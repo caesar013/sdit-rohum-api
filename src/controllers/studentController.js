@@ -2,7 +2,10 @@ import Student from "../models/Student.js";
 import StudentEnrollment from "../models/StudentEnrollment.js";
 import Class from "../models/Class.js";
 import { handleImageUpdate } from "../utils/imageHelper.js";
-import { STUDENT_STATUS } from "../constants/index.js";
+import {
+  STUDENT_STATUS_VALUES,
+  STUDENT_STATUS_LABELS,
+} from "../constants/studentStatus.js";
 import {
   transformImageUrls,
   transformImageUrlsArray,
@@ -410,17 +413,18 @@ export const unenrollStudent = async (req, res) => {
 /**
  * Get student statuses (for form dropdown)
  */
-export const getStudentStatuses = async (req, res) => {
+export const getStudentStatuses = async (req, res, next) => {
   try {
+    const statuses = STUDENT_STATUS_VALUES.map((value) => ({
+      value,
+      label: STUDENT_STATUS_LABELS[value],
+    }));
+
     res.json({
       success: true,
-      data: Object.values(STUDENT_STATUS),
+      data: statuses,
     });
   } catch (error) {
-    console.error("Error fetching student statuses:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching student statuses",
-    });
+    next(error);
   }
 };
