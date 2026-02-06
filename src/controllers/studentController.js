@@ -10,6 +10,7 @@ import {
   transformImageUrls,
   transformImageUrlsArray,
 } from "../utils/urlHelper.js";
+import { deleteFile } from "../utils/fileHelper.js";
 
 /**
  * Get all students with filters
@@ -29,7 +30,7 @@ export const getAllStudents = async (req, res) => {
 
     const result = await Student.getAll(options);
 
-    const transformedData = transformImageUrlsArray(result.data, ["photo"]);
+    const transformedData = transformImageUrlsArray(result.data, ["photo_url"]);
 
     res.json({
       success: true,
@@ -60,7 +61,7 @@ export const getStudentById = async (req, res) => {
       });
     }
 
-    const transformedStudent = transformImageUrls(student, ["photo"]);
+    const transformedStudent = transformImageUrls(student, ["photo_url"]);
     res.json({
       success: true,
       data: transformedStudent,
@@ -119,7 +120,6 @@ export const createStudent = async (req, res) => {
       birth_date,
       parent_name,
       parent_phone,
-      parent_occupation,
       address,
       status,
       class_id,
@@ -142,15 +142,18 @@ export const createStudent = async (req, res) => {
       });
     }
 
-    // Handle photo upload
-    let photo_url = null;
-    if (req.file) {
-      const result = await handleImageUpdate({
-        newImagePath: req.file.path,
-        oldImagePath: null,
+    if (status && !STUDENT_STATUS_VALUES.includes(status)) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
+      return res.status(400).json({
+        success: false,
+        message: "Status tidak valid",
       });
-      photo_url = result.finalPath;
     }
+
+    // Handle photo upload
+    const photo_url = req.file ? `/uploads/photos/${req.file.filename}` : null;
 
     // Create student
     const studentData = {
@@ -163,7 +166,6 @@ export const createStudent = async (req, res) => {
       birth_date,
       parent_name,
       parent_phone,
-      parent_occupation,
       address,
       status: status || "active",
     };
@@ -188,7 +190,7 @@ export const createStudent = async (req, res) => {
     }
 
     const newStudent = await Student.getById(studentId);
-    const transformedStudent = transformImageUrls(newStudent, ["photo"]);
+    const transformedStudent = transformImageUrls(newStudent, ["photo_url"]);
 
     res.status(201).json({
       success: true,
@@ -250,7 +252,9 @@ export const updateStudent = async (req, res) => {
     }
 
     const updatedStudent = await Student.getById(id);
-    const transformedStudent = transformImageUrls(updatedStudent, ["photo"]);
+    const transformedStudent = transformImageUrls(updatedStudent, [
+      "photo_url",
+    ]);
 
     res.json({
       success: true,
