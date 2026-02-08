@@ -12,7 +12,7 @@ export const getAll = async (req, res, next) => {
     // Convert to object format for easier frontend consumption
     const profile = data.reduce((acc, item) => {
       // Transform photo URLs for keys containing 'photo'
-      if (item.key.includes('photo') && item.value) {
+      if (item.key.includes("photo") && item.value) {
         acc[item.key] = getImageUrl(item.value);
       } else {
         acc[item.key] = item.value;
@@ -63,9 +63,10 @@ export const getByKey = async (req, res, next) => {
     }
 
     // Transform photo URLs for keys containing 'photo'
-    const value = key.includes('photo') && data.value 
-      ? getImageUrl(data.value) 
-      : data.value;
+    const value =
+      key.includes("photo") && data.value
+        ? getImageUrl(data.value)
+        : data.value;
 
     res.json({
       success: true,
