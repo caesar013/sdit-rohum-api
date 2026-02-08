@@ -1,4 +1,5 @@
 import SchoolProfile from "../models/SchoolProfile.js";
+import { getImageUrl } from "../utils/urlHelper.js";
 
 /**
  * Get all school profile data
@@ -10,7 +11,12 @@ export const getAll = async (req, res, next) => {
 
     // Convert to object format for easier frontend consumption
     const profile = data.reduce((acc, item) => {
-      acc[item.key] = item.value;
+      // Transform photo URLs for keys containing 'photo'
+      if (item.key.includes('photo') && item.value) {
+        acc[item.key] = getImageUrl(item.value);
+      } else {
+        acc[item.key] = item.value;
+      }
       return acc;
     }, {});
 
@@ -56,11 +62,16 @@ export const getByKey = async (req, res, next) => {
       });
     }
 
+    // Transform photo URLs for keys containing 'photo'
+    const value = key.includes('photo') && data.value 
+      ? getImageUrl(data.value) 
+      : data.value;
+
     res.json({
       success: true,
       data: {
         key: data.key,
-        value: data.value,
+        value: value,
       },
     });
   } catch (error) {
