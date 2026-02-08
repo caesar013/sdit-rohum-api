@@ -1,6 +1,10 @@
 import Alumni from "../models/Alumni.js";
 import { handleImageUpdate } from "../utils/imageHelper.js";
-import { ALUMNI_STATUS } from "../constants/index.js";
+import {
+  ALUMNI_STATUS,
+  ALUMNI_STATUS_LABELS,
+  ALUMNI_STATUS_VALUES,
+} from "../constants/alumniStatus.js";
 import {
   transformImageUrls,
   transformImageUrlsArray,
@@ -15,7 +19,8 @@ export const getAllAlumni = async (req, res) => {
   try {
     const { page, limit, registration_status, graduation_year, gender } =
       req.query;
-    const isAdmin = req.user?.role === "admin";
+    const isAdmin =
+      req.user?.role === "admin" || req.user?.role === "super_admin";
 
     const options = {
       page: parseInt(page) || 1,
@@ -237,7 +242,7 @@ export const updateAlumniStatus = async (req, res) => {
     }
 
     // Validate status
-    const validStatuses = Object.keys(ALUMNI_STATUS);
+    const validStatuses = ALUMNI_STATUS_VALUES;
     if (!validStatuses.includes(registration_status)) {
       return res.status(400).json({
         success: false,
@@ -348,15 +353,14 @@ export const getStatusCounts = async (req, res) => {
  */
 export const getAlumniStatuses = async (req, res) => {
   try {
+    const statuses = ALUMNI_STATUS_VALUES.map((value) => ({
+      value,
+      label: ALUMNI_STATUS_LABELS[value],
+    }));
+
     res.json({
       success: true,
-      data: Object.values(ALUMNI_STATUS),
+      data: statuses,
     });
-  } catch (error) {
-    console.error("Error fetching alumni statuses:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching alumni statuses",
-    });
-  }
+  } catch (error) {}
 };
