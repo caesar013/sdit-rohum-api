@@ -47,6 +47,7 @@ CREATE TABLE achievements (
   achievement_year YEAR NOT NULL,
   category ENUM('academic', 'sport', 'art', 'other') DEFAULT 'other',
   level ENUM('school', 'district', 'city', 'province', 'national', 'international') DEFAULT 'school',
+  certification_image VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_year (achievement_year),

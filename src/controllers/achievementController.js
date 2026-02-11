@@ -1,4 +1,10 @@
 import Achievement from "../models/Achievement.js";
+import { deleteFile } from "../utils/fileHelper.js";
+import { handleImageUpdate } from "../utils/imageHelper.js";
+import {
+  transformImageUrls,
+  transformImageUrlsArray,
+} from "../utils/urlHelper.js";
 import {
   ACHIEVEMENT_CATEGORY_VALUES,
   ACHIEVEMENT_CATEGORY_LABELS,
@@ -37,9 +43,13 @@ export const getAllAchievements = async (req, res, next) => {
       year: year ? parseInt(year) : null,
     });
 
+    // Transform certification_image URLs
+    const transformedData = transformImageUrlsArray(result.data, ['certification_image']);
+
     res.json({
       success: true,
-      ...result,
+      data: transformedData,
+      pagination: result.pagination,
     });
   } catch (error) {
     next(error);
@@ -61,9 +71,12 @@ export const getAchievementById = async (req, res, next) => {
       });
     }
 
+    // Transform certification_image URL
+    const transformedAchievement = transformImageUrls(achievement, ['certification_image']);
+
     res.json({
       success: true,
-      data: achievement,
+      data: transformedAchievement,
     });
   } catch (error) {
     next(error);
@@ -165,6 +178,9 @@ export const createAchievement = async (req, res, next) => {
 
     // Validation
     if (!title || !achievement_year) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       return res.status(400).json({
         success: false,
         message: "Judul dan tahun prestasi harus diisi",
@@ -173,6 +189,9 @@ export const createAchievement = async (req, res, next) => {
 
     // Validate category if provided
     if (category && !ACHIEVEMENT_CATEGORY_VALUES.includes(category)) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       return res.status(400).json({
         success: false,
         message: "Kategori tidak valid",
@@ -181,11 +200,17 @@ export const createAchievement = async (req, res, next) => {
 
     // Validate level if provided
     if (level && !ACHIEVEMENT_LEVEL_VALUES.includes(level)) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       return res.status(400).json({
         success: false,
         message: "Level tidak valid",
       });
     }
+
+    // Handle certification image upload
+    const certification_image = req.file ? `/uploads/photos/${req.file.filename}` : null;
 
     const achievementId = await Achievement.create({
       title,
@@ -193,16 +218,21 @@ export const createAchievement = async (req, res, next) => {
       achievement_year: parseInt(achievement_year),
       category,
       level,
+      certification_image,
     });
 
     const achievement = await Achievement.getById(achievementId);
+    const transformedAchievement = transformImageUrls(achievement, ['certification_image']);
 
     res.status(201).json({
       success: true,
       message: "Prestasi berhasil ditambahkan",
-      data: achievement,
+      data: transformedAchievement,
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(req.file.path);
+    }
     next(error);
   }
 };
@@ -217,6 +247,9 @@ export const updateAchievement = async (req, res, next) => {
 
     const existing = await Achievement.getById(id);
     if (!existing) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       return res.status(404).json({
         success: false,
         message: "Prestasi tidak ditemukan",
@@ -225,6 +258,9 @@ export const updateAchievement = async (req, res, next) => {
 
     // Validate category if provided
     if (category && !ACHIEVEMENT_CATEGORY_VALUES.includes(category)) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       return res.status(400).json({
         success: false,
         message: "Kategori tidak valid",
@@ -233,10 +269,23 @@ export const updateAchievement = async (req, res, next) => {
 
     // Validate level if provided
     if (level && !ACHIEVEMENT_LEVEL_VALUES.includes(level)) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       return res.status(400).json({
         success: false,
         message: "Level tidak valid",
       });
+    }
+
+    // Handle certification image update
+    let certification_image = existing.certification_image;
+    if (req.file) {
+      const result = await handleImageUpdate({
+        newImagePath: req.file.path,
+        oldImagePath: existing.certification_image,
+      });
+      certification_image = result.imagePath;
     }
 
     await Achievement.update(id, {
@@ -247,16 +296,21 @@ export const updateAchievement = async (req, res, next) => {
         : undefined,
       category,
       level,
+      certification_image,
     });
 
     const updated = await Achievement.getById(id);
+    const transformedAchievement = transformImageUrls(updated, ['certification_image']);
 
     res.json({
       success: true,
       message: "Prestasi berhasil diupdate",
-      data: updated,
+      data: transformedAchievement,
     });
   } catch (error) {
+    if (req.file) {
+      deleteFile(req.file.path);
+    }
     next(error);
   }
 };
@@ -274,6 +328,11 @@ export const deleteAchievement = async (req, res, next) => {
         success: false,
         message: "Prestasi tidak ditemukan",
       });
+    }
+
+    // Delete certification image if exists
+    if (achievement.certification_image) {
+      deleteFile(`.${achievement.certification_image}`);
     }
 
     await Achievement.delete(id);
