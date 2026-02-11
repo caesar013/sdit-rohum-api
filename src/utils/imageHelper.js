@@ -143,11 +143,21 @@ export const deleteFileSafe = async (filePath) => {
  */
 export const handleImageUpdate = async ({ newImagePath, oldImagePath }) => {
   try {
+    // Normalize the new image path to relative path for database storage
+    const normalizeImagePath = (fullPath) => {
+      if (fullPath.includes('/uploads/')) {
+        return fullPath.substring(fullPath.indexOf('/uploads/'));
+      }
+      return fullPath;
+    };
+
+    const normalizedNewPath = normalizeImagePath(newImagePath);
+
     // If no old image, just return the new one
     if (!oldImagePath) {
       return {
         updated: true,
-        imagePath: newImagePath,
+        imagePath: normalizedNewPath,
         message: "New image uploaded",
       };
     }
@@ -161,7 +171,7 @@ export const handleImageUpdate = async ({ newImagePath, oldImagePath }) => {
       // Old file doesn't exist, use new one
       return {
         updated: true,
-        imagePath: newImagePath,
+        imagePath: normalizedNewPath,
         message: "Old image not found, using new image",
       };
     }
@@ -182,16 +192,20 @@ export const handleImageUpdate = async ({ newImagePath, oldImagePath }) => {
       await deleteFileSafe(oldFullPath);
       return {
         updated: true,
-        imagePath: newImagePath,
+        imagePath: normalizedNewPath,
         message: "Image updated successfully",
       };
     }
   } catch (error) {
     console.error("Error handling image update:", error);
-    // On error, keep the new image
+    // On error, keep the new image (normalized path)
+    const normalizedNewPath = newImagePath.includes('/uploads/') 
+      ? newImagePath.substring(newImagePath.indexOf('/uploads/'))
+      : newImagePath;
+    
     return {
       updated: true,
-      imagePath: newImagePath,
+      imagePath: normalizedNewPath,
       message: "Image updated (comparison failed)",
       error: error.message,
     };

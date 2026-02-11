@@ -221,19 +221,12 @@ export const updateTeacher = async (req, res, next) => {
     // Handle new photo with smart comparison
     let photo_url = existing.photo_url;
     if (req.file) {
-      const newImagePath = req.file.path;
-      const oldImagePath = existing.photo_url ? `.${existing.photo_url}` : null;
-
       const result = await handleImageUpdate({
-        newImagePath,
-        oldImagePath,
+        newImagePath: req.file.path,
+        oldImagePath: existing.photo_url,
       });
 
-      // Use the resolved image path (either old or new)
-      photo_url = result.imagePath.startsWith("/uploads")
-        ? result.imagePath
-        : `/uploads/photos/${req.file.filename}`;
-
+      photo_url = result.imagePath;
     }
 
     await Teacher.update(id, {
