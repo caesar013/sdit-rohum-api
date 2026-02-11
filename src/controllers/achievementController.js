@@ -44,7 +44,7 @@ export const getAllAchievements = async (req, res, next) => {
     });
 
     // Transform certification_image URLs
-    const transformedData = transformImageUrlsArray(result.data, ['certification_image']);
+    const transformedData = transformImageUrlsArray(result.data, ["certification_image"]);
 
     res.json({
       success: true,

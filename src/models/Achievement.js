@@ -112,6 +112,7 @@ class Achievement {
       "achievement_year",
       "category",
       "level",
+      "certification_image",
     ];
 
     // Loop through allowed fields and build query
