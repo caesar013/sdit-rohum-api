@@ -239,7 +239,7 @@ export const updateStudent = async (req, res) => {
         newImagePath: req.file.path,
         oldImagePath: existingStudent.photo_url,
       });
-      updateData.photo_url = result.finalPath;
+      updateData.photo_url = result.imagePath;
     }
 
     const affectedRows = await Student.update(id, updateData);

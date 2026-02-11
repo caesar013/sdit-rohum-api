@@ -511,7 +511,7 @@ const result = await handleImageUpdate({
   newImagePath: req.file.path,
   oldImagePath: existingRecord.photo_url
 });
-// Returns: { finalPath, isDuplicate }
+// Returns: { updated, imagePath, message }
 // Compares perceptual hashes to avoid uploading identical images
 ```
 

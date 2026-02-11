@@ -118,7 +118,7 @@ export const createAlumni = async (req, res) => {
         newImagePath: req.file.path,
         oldImagePath: null,
       });
-      photo_url = result.finalPath;
+      photo_url = result.imagePath;
     }
 
     // Create alumni with pending status
@@ -188,7 +188,7 @@ export const updateAlumni = async (req, res) => {
         newImagePath: req.file.path,
         oldImagePath: existingAlumni.photo_url,
       });
-      updateData.photo_url = result.finalPath;
+      updateData.photo_url = result.imagePath;
     }
 
     const affectedRows = await Alumni.update(id, updateData);
