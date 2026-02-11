@@ -83,13 +83,14 @@ class Achievement {
       achievement_year,
       category = "other",
       level = "school",
+      certification_image = null,
     } = achievementData;
 
     const [result] = await pool.query(
       `INSERT INTO achievements 
-       (title, description, achievement_year, category, level) 
-       VALUES (?, ?, ?, ?, ?)`,
-      [title, description, achievement_year, category, level],
+       (title, description, achievement_year, category, level, certification_image) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [title, description, achievement_year, category, level, certification_image],
     );
 
     return result.insertId;
