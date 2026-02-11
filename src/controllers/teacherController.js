@@ -234,7 +234,6 @@ export const updateTeacher = async (req, res, next) => {
         ? result.imagePath
         : `/uploads/photos/${req.file.filename}`;
 
-      console.log(`📸 Teacher photo update: ${result.message}`);
     }
 
     await Teacher.update(id, {
