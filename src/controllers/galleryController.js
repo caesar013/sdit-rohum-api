@@ -1,6 +1,7 @@
 import PhotoAlbum from "../models/PhotoAlbum.js";
 import Photo from "../models/Photo.js";
 import { deleteFile } from "../utils/fileHelper.js";
+import { handleImageUpdate } from "../utils/imageHelper.js";
 import {
   transformImageUrls,
   transformImageUrlsArray,
@@ -108,16 +109,17 @@ export const createAlbum = async (req, res, next) => {
 
     // Validation
     if (!title) {
+      if (req.file) {
+        deleteFile(req.file.path);
+      }
       return res.status(400).json({
         success: false,
         message: "Title harus diisi",
       });
     }
 
-    // Get cover photo from upload if exists
-    const cover_photo = req.file
-      ? `/uploads/photos/${req.file.filename}`
-      : null;
+    // Get cover photo from upload if exists (model auto-generates slug)
+    const cover_photo = req.file ? `/uploads/photos/${req.file.filename}` : null;
 
     const albumId = await PhotoAlbum.create({
       title,
@@ -162,14 +164,14 @@ export const updateAlbum = async (req, res, next) => {
       });
     }
 
-    // Handle new cover photo
+    // Handle new cover photo with smart comparison
     let cover_photo = existing.cover_photo;
     if (req.file) {
-      cover_photo = `/uploads/photos/${req.file.filename}`;
-      // Delete old cover photo if exists
-      if (existing.cover_photo) {
-        deleteFile(`.${existing.cover_photo}`);
-      }
+      const result = await handleImageUpdate({
+        newImagePath: req.file.path,
+        oldImagePath: existing.cover_photo,
+      });
+      cover_photo = result.imagePath;
     }
 
     await PhotoAlbum.update(id, {
@@ -305,14 +307,14 @@ export const updatePhoto = async (req, res, next) => {
       });
     }
 
-    // Handle new photo upload
+    // Handle new photo upload with smart comparison
     let photo_url = existing.photo_url;
     if (req.file) {
-      photo_url = `/uploads/photos/${req.file.filename}`;
-      // Delete old photo
-      if (existing.photo_url) {
-        deleteFile(`.${existing.photo_url}`);
-      }
+      const result = await handleImageUpdate({
+        newImagePath: req.file.path,
+        oldImagePath: existing.photo_url,
+      });
+      photo_url = result.imagePath;
     }
 
     await Photo.update(id, {
