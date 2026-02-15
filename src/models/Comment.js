@@ -18,7 +18,7 @@ class Comment {
         WHERE news_id = ?
       `;
 
-      if (!showAll) {
+      if (showAll) {
         query += ` AND status = 'approved'`;
       }
 
@@ -112,54 +112,59 @@ class Comment {
   static async getAll(filters = {}) {
     try {
       const { page = 1, limit = 20, status, news_id } = filters;
-      const offset = (page - 1) * limit;
+      const parsedLimit = parseInt(limit);
+      const parsedPage = parseInt(page);
+      const offset = (parsedPage - 1) * parsedLimit;
 
-      let whereConditions = [];
-      let queryParams = [];
+      let query = "SELECT COUNT(*) as total FROM news_comments WHERE 1=1";
+      const params = [];
 
       if (status) {
-        whereConditions.push("status = ?");
-        queryParams.push(status);
+        query += " AND status = ?";
+        params.push(status);
       }
 
       if (news_id) {
-        whereConditions.push("news_id = ?");
-        queryParams.push(news_id);
+        query += " AND news_id = ?";
+        params.push(news_id);
       }
 
-      const whereClause =
-        whereConditions.length > 0
-          ? "WHERE " + whereConditions.join(" AND ")
-          : "";
-
       // Get total count
-      const [countResult] = await db.query(
-        `SELECT COUNT(*) as total FROM news_comments ${whereClause}`,
-        queryParams,
-      );
+      const [countResult] = await db.query(query, params);
       const total = countResult[0].total;
 
       // Get paginated data
-      const [comments] = await db.query(
-        `SELECT 
+      let dataQuery = `SELECT 
           nc.*,
           n.title as news_title,
           n.slug as news_slug
          FROM news_comments nc
          LEFT JOIN news n ON nc.news_id = n.id
-         ${whereClause}
-         ORDER BY nc.created_at DESC
-         LIMIT ? OFFSET ?`,
-        [...queryParams, limit, offset],
-      );
+         WHERE 1=1`;
+
+      if (status) {
+        dataQuery += " AND nc.status = ?";
+      }
+
+      if (news_id) {
+        dataQuery += " AND nc.news_id = ?";
+      }
+
+      dataQuery += " ORDER BY nc.created_at DESC LIMIT ? OFFSET ?";
+
+      const [comments] = await db.query(dataQuery, [
+        ...params,
+        parsedLimit,
+        offset,
+      ]);
 
       return {
         comments,
         pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
+          page: parsedPage,
+          limit: parsedLimit,
           total,
-          totalPages: Math.ceil(total / limit),
+          totalPages: Math.ceil(total / parsedLimit),
         },
       };
     } catch (error) {
