@@ -1,12 +1,11 @@
 import Comment from "../models/Comment.js";
 
-// Get comments for a news article (public: approved only, admin: all)
+// Get comments for a news article (public: approved only)
 export const getCommentsByNewsId = async (req, res) => {
   try {
     const { newsId } = req.params;
-    const showAll = req.user ? true : false; // Show all if authenticated admin
 
-    const comments = await Comment.getByNewsId(newsId, showAll);
+    const comments = await Comment.getByNewsId(newsId);
 
     res.json({
       success: true,

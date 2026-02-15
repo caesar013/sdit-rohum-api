@@ -1,10 +1,10 @@
 import db from "../config/database.js";
 
 class Comment {
-  // Get all comments for a news article (public: approved only, admin: all)
-  static async getByNewsId(newsId, showAll = false) {
+  // Get all comments for a news article (public: approved only)
+  static async getByNewsId(newsId) {
     try {
-      let query = `
+      const query = `
         SELECT 
           id,
           news_id,
@@ -15,14 +15,9 @@ class Comment {
           created_at,
           updated_at
         FROM news_comments
-        WHERE news_id = ?
+        WHERE news_id = ? AND status = 'approved'
+        ORDER BY created_at DESC
       `;
-
-      if (showAll) {
-        query += ` AND status = 'approved'`;
-      }
-
-      query += ` ORDER BY created_at DESC`;
 
       const [comments] = await db.query(query, [newsId]);
       return comments;
