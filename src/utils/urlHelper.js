@@ -26,6 +26,22 @@ export const getImageUrl = (relativePath) => {
 };
 
 /**
+ * Convert absolute file path to relative path for storage
+ * @param {string} absolutePath - Absolute file path
+ * @returns {string} - Relative path starting from uploads/
+ */
+export const getRelativePath = (absolutePath) => {
+  if (!absolutePath) return null;
+
+  // Find the 'uploads' directory in the path
+  const uploadsIndex = absolutePath.indexOf('uploads');
+  if (uploadsIndex === -1) return absolutePath;
+
+  // Return path starting from 'uploads/'
+  return absolutePath.substring(uploadsIndex);
+};
+
+/**
  * Transform object with image fields to include full URLs
  * @param {Object} obj - Object with image paths
  * @param {Array} imageFields - Array of field names that contain image paths
