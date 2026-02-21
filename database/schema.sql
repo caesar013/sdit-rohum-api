@@ -32,6 +32,7 @@ CREATE TABLE school_profile (
   id INT AUTO_INCREMENT PRIMARY KEY,
   `key` VARCHAR(100) NOT NULL UNIQUE,
   `value` TEXT,
+  `type` VARCHAR(50) DEFAULT 'text',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   INDEX idx_key (`key`)
@@ -315,21 +316,21 @@ INSERT INTO users (name, email, password, role, is_active) VALUES
 -- ============================================
 -- Insert School Profile Data
 -- ============================================
-INSERT INTO school_profile (`key`, `value`) VALUES
-  ('school_name', 'SD IT Rohmatul Ummah'),
-  ('npsn', '20528764'),
-  ('address', 'Jl. Pendidikan No. 123, Kota Anda'),
-  ('phone', '(021) 1234567'),
-  ('email', 'info@sditrohum.sch.id'),
-  ('website', 'https://sditrohum.sch.id'),
-  ('principal_name', 'Dr. Ahmad Hidayat, M.Pd'),
-  ('principal_message', 'Assalamualaikum warahmatullahi wabarakatuh. Selamat datang di SD IT Rohmatul Ummah. Kami berkomitmen untuk memberikan pendidikan terbaik yang mengintegrasikan ilmu pengetahuan dengan nilai-nilai Islam.'),
-  ('established_year', '2010'),
-  ('accreditation', 'A'),
-  ('accreditation_year', '2023'),
-  ('logo_url', ''),
-  ('vision', 'Menjadi sekolah Islam terpadu yang unggul dalam prestasi dan berakhlak mulia'),
-  ('mission', 'Menyelenggarakan pendidikan Islam yang berkualitas; Membentuk generasi yang cerdas, kreatif, dan berakhlak mulia; Menciptakan lingkungan belajar yang kondusif dan Islami');
+INSERT INTO school_profile (`key`, `value`, `type`) VALUES
+  ('school_name', 'SD IT Rohmatul Ummah', 'text'),
+  ('npsn', '20528764', 'text'),
+  ('address', 'Jl. Pendidikan No. 123, Kota Anda', 'text'),
+  ('phone', '(021) 1234567', 'phone'),
+  ('email', 'info@sditrohum.sch.id', 'email'),
+  ('website', 'https://sditrohum.sch.id', 'url'),
+  ('principal_name', 'Dr. Ahmad Hidayat, M.Pd', 'text'),
+  ('principal_message', 'Assalamualaikum warahmatullahi wabarakatuh. Selamat datang di SD IT Rohmatul Ummah. Kami berkomitmen untuk memberikan pendidikan terbaik yang mengintegrasikan ilmu pengetahuan dengan nilai-nilai Islam.', 'text'),
+  ('established_year', '2010', 'text'),
+  ('accreditation', 'A', 'text'),
+  ('accreditation_year', '2023', 'text'),
+  ('logo_url', '', 'image'),
+  ('vision', 'Menjadi sekolah Islam terpadu yang unggul dalam prestasi dan berakhlak mulia', 'text'),
+  ('mission', 'Menyelenggarakan pendidikan Islam yang berkualitas; Membentuk generasi yang cerdas, kreatif, dan berakhlak mulia; Menciptakan lingkungan belajar yang kondusif dan Islami', 'text');
 
 -- ============================================
 -- Insert Sample Achievements
